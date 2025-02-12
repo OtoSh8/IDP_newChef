@@ -7,6 +7,9 @@ using Unity.VisualScripting;
 
 public class scr_knife : MonoBehaviour
 {
+    public GameObject campos;
+    public GameObject camposstation;
+
     public Material crossSectionMaterial = null; // Material for the sliced section
     public GameObject detected;
 
@@ -55,6 +58,8 @@ public class scr_knife : MonoBehaviour
         parsalt.SetActive(true);
         parsalt.GetComponent<scr_salt>().amt = 0;
         isSalting = true;
+        GameObject.Find("obj_instructor").GetComponent<scr_instructor>().targetObject = campos;
+        this.transform.parent.GetComponent<MeshRenderer>().enabled = false;
     }
 
     public void FinishSalting()
@@ -62,6 +67,8 @@ public class scr_knife : MonoBehaviour
         isSalting = false;
         parsalt.SetActive(false);
         salt = false;
+        GameObject.Find("obj_instructor").GetComponent<scr_instructor>().targetObject = camposstation;
+        this.transform.parent.GetComponent<MeshRenderer>().enabled = true;
         Repos();
     }
 

@@ -154,6 +154,8 @@ public class scr_controller : MonoBehaviour
 
     public IEnumerator StartCook()
     {
+        par_dishlist.GetComponent<Animator>().Play("ani_dishlist_appear");
+        yield return new WaitForSeconds(2.5f);
         txttitle.Play("ani_title_appear");
         yield return new WaitForSeconds(2f);
         objinstr.StartCook();
