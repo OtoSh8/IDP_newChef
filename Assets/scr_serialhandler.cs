@@ -4,44 +4,79 @@ using System.Threading;
 
 public class scr_serialhandler : MonoBehaviour
 {
-    public static string knifeport = "COM";
+    [SerializeField] scr_station_cut station_cut;
+    private int current;
 
-    Thread IOThread = new Thread(DataThread);
-    private static SerialPort sp;
-    private static string incoming = "";
-    private static string outgoing = "";
-
-    private static void DataThread()
-    {
-        sp = new SerialPort(knifeport, 9600);
-        sp.Open();
-
-        if(outgoing != "")
-        {
-            sp.Write(outgoing);
-            outgoing = "";
-        }
-
-        incoming = sp.ReadExisting();
-        Thread.Sleep(200);
-    }
-
-    private void OnDestroy()
-    {
-        IOThread.Abort();
-        sp.Close();
-    }
+    public static string knifeport = "COM16"; // Change COM port if necessary
+    private SerialPort sp;
+    private Thread IOThread;
+    private bool threadRunning = false;
+    private string incoming = "";
 
     private void Start()
     {
-        IOThread.Start();
+        // Initialize serial port
+        sp = new SerialPort(knifeport, 9600);
+        sp.ReadTimeout = 50; // Prevent freezing on read
+        sp.WriteTimeout = 50;
+
+        try
+        {
+            sp.Open(); // Open the serial port
+            threadRunning = true;
+            IOThread = new Thread(DataThread);
+            IOThread.Start();
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("Failed to open serial port: " + e.Message);
+        }
+    }
+
+    private void DataThread()
+    {
+        while (threadRunning && sp.IsOpen)
+        {
+            try
+            {
+                string data = sp.ReadLine(); // Read line-by-line
+                lock (this)
+                {
+                    incoming = data; // Store data safely
+                }
+            }
+            catch (System.Exception) { } // Ignore errors (e.g., ReadTimeout)
+        }
     }
 
     private void Update()
     {
-        if(incoming != "")
+        lock (this)
         {
-            Debug.Log(incoming);
+            if (!string.IsNullOrEmpty(incoming))
+            {
+                Debug.Log("Received: " + incoming);
+                if(System.Convert.ToInt16(incoming) > current)
+                {
+                    current = System.Convert.ToInt16(incoming);
+                    station_cut.Cut();
+
+                }
+
+                incoming = ""; // Clear after reading
+            }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        threadRunning = false;
+        if (IOThread != null && IOThread.IsAlive)
+            IOThread.Join(); // Ensure thread stops before quitting
+
+        if (sp != null && sp.IsOpen)
+        {
+            sp.Close();
         }
     }
 }

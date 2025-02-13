@@ -1,20 +1,82 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class scr_cook : MonoBehaviour
 {
+    [Header("Action Values")]
+    public int targetvalue;
+    public int targettime;
+    public float crnt_time = 0;
+    private bool cooking = false;
+
+    [Header("Finished Materials/Textures")]
+    [SerializeField] Material mat_friedrice;
+
+    [Header("Stovetop left/right References")]
     public int leftValue = 0;
     public int rightValue = 0; // The adjustable integer value
     public GameObject knob_left;
     public GameObject knob_right;
     public GameObject fire_left; // The GameObject to enable/disable based on currentValue
     public GameObject fire_right;
+    public Transform Spawn_left;
+    public scr_instructor instr;
+
+    public GameObject finished_left;
 
     public bool sel_side = false;
 
+    private void FinishCooking()
+    {
+        cooking = false;
+
+        if (!sel_side)
+        {
+            finished_left.SetActive(true);
+        }
+
+        crnt_time = 0;
+        leftValue = 0;
+        rightValue = 0;
+        cooking = false;
+        this.GetComponent<scr_cook>().enabled = false;
+        instr.FinishStep(null);
+    }
+
+    public void ReInit(List<GameObject> cutted)
+    {
+        crnt_time = 0;
+        leftValue = 0;
+        rightValue = 0;
+
+        foreach (GameObject obj in cutted)
+        {
+            obj.transform.parent = Spawn_left.transform.parent;
+            obj.transform.localPosition = new Vector3(0, 0, 0);
+        }
+
+        finished_left.SetActive(false);
+        cooking = false;
+    }
+
     void Update()
     {
+        if(cooking)
+        {
+            crnt_time += Time.deltaTime;
+            if(crnt_time > targettime)
+            {
+                Debug.Log("FINISHED COOKING CUH");
+                FinishCooking();
+            }
+        }
+
+        if (leftValue > targetvalue) return;
+
         GameObject targetObject = null;
         GameObject objectToToggle = null;
+
 
         switch (sel_side)
         {
@@ -39,10 +101,13 @@ public class scr_cook : MonoBehaviour
                 if (leftValue > 10)
                 {
                     objectToToggle.SetActive(true); // Enable the GameObject
+                    cooking = true;
+
                 }
                 else
                 {
                     objectToToggle.SetActive(false); // Disable the GameObject
+                    cooking = false;
                 }
 
                 break;

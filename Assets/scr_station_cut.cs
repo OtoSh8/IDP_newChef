@@ -12,11 +12,18 @@ public class scr_station_cut : MonoBehaviour
     public List<GameObject> ToCut;
     public List<bool> ToSalt;
 
-    void Update()
+    public void Cut()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && obj_knife.GetComponent<scr_knife>().cutting == false && obj_knife.GetComponent<scr_knife>().slicedcount < 5)
+        if (obj_knife.GetComponent<scr_knife>().cutting == false && obj_knife.GetComponent<scr_knife>().slicedcount < 5)
         {
             this.GetComponent<Animator>().Play("ani_cutting_cut");
+        }
+    }
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Cut();
         }
     }
 

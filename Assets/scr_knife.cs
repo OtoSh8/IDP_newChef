@@ -103,7 +103,7 @@ public class scr_knife : MonoBehaviour
     {
         if (slicedcount < 5)
         {
-            this.transform.parent.parent.gameObject.transform.position = new Vector3(this.gameObject.transform.parent.parent.position.x + slicedist / 5, this.gameObject.transform.parent.parent.position.y, this.transform.parent.parent.gameObject.transform.position.z);
+            this.transform.parent.parent.gameObject.transform.position = new Vector3(this.gameObject.transform.parent.parent.position.x + slicedist / 6, this.gameObject.transform.parent.parent.position.y, this.transform.parent.parent.gameObject.transform.position.z);
             cutting = false;
         }
         else if(salt == true)
@@ -130,21 +130,29 @@ public class scr_knife : MonoBehaviour
             GameObject upperHull = slicedHull.CreateUpperHull(target, crossSectionMaterial);
             GameObject lowerHull = slicedHull.CreateLowerHull(target, crossSectionMaterial);
 
-            SetupSlicedObject(upperHull);
-            SetupSlicedObject(lowerHull);
+            SetupSlicedObject(upperHull,true);
+            SetupSlicedObject(lowerHull,false);
 
             Destroy(target); // Remove the original object
         }
     }
 
-    void SetupSlicedObject(GameObject obj)
+    void SetupSlicedObject(GameObject obj,bool upper)
     {
         obj.AddComponent<MeshCollider>().convex = true;  // Add collider
         obj.AddComponent<Rigidbody>();  // Enable physics
         obj.tag = "Sliceable";  // Allow further slicing if needed
         obj.transform.parent = cutpar.transform;
         obj.transform.localPosition = Vector3.zero;
-        obj.layer = LayerMask.NameToLayer("Objects");
+        
 
+        if (upper)
+        {
+            obj.layer = LayerMask.NameToLayer("Objects");
+        }
+        else
+        {
+            obj.layer = LayerMask.NameToLayer("Default");
+        }
     }
 }

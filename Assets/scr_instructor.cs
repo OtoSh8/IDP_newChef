@@ -21,7 +21,9 @@ public class scr_instructor : MonoBehaviour
 
     [Header("Cutting Object References")]
     [SerializeField] GameObject testcut;
+    [SerializeField] GameObject carrot;
 
+    [Header("Others")]
     [SerializeField] Animator txttitle;
     public GameObject targetObject;
     public scr_controller controller;
@@ -67,7 +69,7 @@ public class scr_instructor : MonoBehaviour
                 switch (step)
                 {
                     case 0:
-                        List<GameObject> list = new List<GameObject>( new GameObject[] {testcut, testcut });
+                        List<GameObject> list = new List<GameObject>( new GameObject[] {carrot, carrot});
                         List<bool> list2 = new List<bool>(new bool[] { false, true });
                         StationCut(list, list2);
                         break;
@@ -75,6 +77,10 @@ public class scr_instructor : MonoBehaviour
                         StationMix(ingr,10);
                         break;
                     case 2:
+                        StationCook(ingr, 20, 10);
+                        
+                        break;
+                    case 3:
                         Debug.Log("DISH IS DONE");
                         break;
                 }
@@ -115,6 +121,16 @@ public class scr_instructor : MonoBehaviour
         mix.GetComponent<scr_mixer>().Reinit(goal,cutted);
 
         targetObject = stationmix;
+    }
+
+    private void StationCook(List<GameObject> cutted, int target, int length)
+    {
+        cook.GetComponent<scr_cook>().enabled = true;
+        cook.GetComponent<scr_cook>().ReInit(cutted);
+        cook.GetComponent<scr_cook>().targettime = length;
+        cook.GetComponent<scr_cook>().targetvalue = target;
+
+        targetObject = stationcook;
     }
 }
 
