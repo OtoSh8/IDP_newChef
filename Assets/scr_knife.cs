@@ -140,7 +140,8 @@ public class scr_knife : MonoBehaviour
     void SetupSlicedObject(GameObject obj,bool upper)
     {
         obj.AddComponent<MeshCollider>().convex = true;  // Add collider
-        obj.AddComponent<Rigidbody>();  // Enable physics
+        var rgd = obj.AddComponent<Rigidbody>();  // Enable physics
+        rgd.mass = 100;
         obj.tag = "Sliceable";  // Allow further slicing if needed
         obj.transform.parent = cutpar.transform;
         obj.transform.localPosition = Vector3.zero;
