@@ -30,7 +30,7 @@ public class scr_instructor : MonoBehaviour
     public float moveSpeed = 5f;    // Speed at which the camera moves towards the target
     public float rotationSpeed = 5f; // Speed at which the camera rotates towards the target
     private int crntstep = 0;
-    private int crntdish = 0;
+    public int crntdish = 0;
 
     private void Start()
     {

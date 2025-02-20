@@ -24,16 +24,31 @@ public class scr_cook : MonoBehaviour
     public scr_instructor instr;
 
     public GameObject finished_left;
+    public Animator objcooker;
 
     public bool sel_side = false;
+
+    List<GameObject> ingr = new List<GameObject>();
 
     private void FinishCooking()
     {
         cooking = false;
+        objcooker.Play("ani_cook_idle");
+
+        foreach (GameObject go in ingr)
+        {
+            go.SetActive(false);
+        }
 
         if (!sel_side)
         {
             finished_left.SetActive(true);
+            switch (GameObject.Find("obj_instructor").GetComponent<scr_instructor>().crntdish)
+            {
+                case 1:
+                    finished_left.GetComponent<MeshRenderer>().material = mat_friedrice;
+                    break;
+            }
         }
 
         crnt_time = 0;
@@ -46,13 +61,18 @@ public class scr_cook : MonoBehaviour
 
     public void ReInit(List<GameObject> cutted)
     {
+        ingr = cutted;
         crnt_time = 0;
         leftValue = 0;
         rightValue = 0;
 
         foreach (GameObject obj in cutted)
         {
-            obj.transform.parent = Spawn_left.transform.parent;
+            foreach(Transform t in obj.transform)
+            {
+                t.localPosition = new Vector3(0, 0, 0);
+            }
+            obj.transform.parent = Spawn_left.transform;
             obj.transform.localPosition = new Vector3(0, 0, 0);
         }
 
@@ -65,11 +85,17 @@ public class scr_cook : MonoBehaviour
         if(cooking)
         {
             crnt_time += Time.deltaTime;
+            objcooker.Play("ani_cooking");
             if(crnt_time > targettime)
             {
                 Debug.Log("FINISHED COOKING CUH");
+                
                 FinishCooking();
             }
+        }
+        else
+        {
+            objcooker.Play("ani_cook_idle");
         }
 
         if (leftValue > targetvalue) return;

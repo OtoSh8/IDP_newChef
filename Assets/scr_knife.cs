@@ -142,6 +142,9 @@ public class scr_knife : MonoBehaviour
         obj.AddComponent<MeshCollider>().convex = true;  // Add collider
         var rgd = obj.AddComponent<Rigidbody>();  // Enable physics
         rgd.mass = 100;
+        rgd.linearDamping = 10;
+        rgd.angularDamping = 10;
+        /*rgd.freezeRotation = true;*/
         obj.tag = "Sliceable";  // Allow further slicing if needed
         obj.transform.parent = cutpar.transform;
         obj.transform.localPosition = Vector3.zero;
