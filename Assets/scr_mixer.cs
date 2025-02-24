@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class scr_mixer : MonoBehaviour
 {
+    [SerializeField] GameObject ui_mix;
+
     [SerializeField] GameObject objmixer;
     [SerializeField] Transform spawn;
 
@@ -26,21 +28,34 @@ public class scr_mixer : MonoBehaviour
     {
         amt = 0;
         goal = x;
+        ingr.Clear ();
+
         if(cutted != null)
         {
             foreach(GameObject obj in cutted)
             {
                 obj.transform.parent = this.transform.parent;
                 obj.transform.localPosition = spawn.localPosition;
-                obj.SetActive(true);
                 ingr.Add(obj);
             }
+            StartCoroutine(SpawnAll());
+        }
+        ui_mix.SetActive(true);
+    }
+
+    private IEnumerator SpawnAll()
+    {
+        foreach (GameObject obj in ingr)
+        {
+            obj.SetActive (true);
+            yield return new WaitForSeconds(0.5f);
         }
     }
 
     private void Start()
     {
         startingpos = objmixer.transform.position;
+        
     }
     void Update()
     {
@@ -62,7 +77,7 @@ public class scr_mixer : MonoBehaviour
 
     IEnumerator GetSignal()
     {
-
+        PlayMix();
         yield return new WaitForSeconds(0.5f);
         isMoving = false;
         if(amt >= goal)
@@ -72,8 +87,14 @@ public class scr_mixer : MonoBehaviour
         yield return null;
     }
 
+    public void PlayMix()
+    {
+        GameObject.Find("obj_audio").GetComponent<scr_audio>().PlaySoundID(1);
+    }
+
     public void Finished()
     {
+        ui_mix.SetActive(false);
         instr.FinishStep(ingr);
         this.GetComponent<scr_mixer>().enabled = false;
     }

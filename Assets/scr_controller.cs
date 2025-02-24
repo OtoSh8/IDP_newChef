@@ -12,6 +12,8 @@ public class scr_controller : MonoBehaviour
     [Header("GameObject Links")]
     public scr_instructor objinstr;
 
+    public GameObject ui_button;
+
     public GameObject par_customer;
     public GameObject par_dialog;
     public GameObject par_dishlist;
@@ -32,7 +34,7 @@ public class scr_controller : MonoBehaviour
 
     [Header("Personality Preferences")]
     public int personalities = 1;
-    private string[] Customer_Prideful = { "Hello there sir,<!wait=0.5> its such a <b><+shake><wave> Greeaaaaat </b></wave></+shake> day today huh?<!wait=1>", "Anyways,<!wait=0.5> I'm feeling <!delay=0.15>very hungry <!delay=0.08>so I'll have $<!wait=1>" };
+    private string[] Customer_Prideful = { "Hello there sir,<!wait=0.5> its such a <b><+shake><funky> Greeaaaaat </b></funky></+shake> day today huh?<!wait=1>", "Anyways,<!wait=0.2> I'm feeling <!delay=0.2><+shake> very hungry <!delay=0.02> </+shake> so I'll have $<!wait=1>", "I'm looking forward to enjoying a <wave><!delay=0.1>hugeeeeee<!delay=0.02></wave> feastttt.<!wait=0.2> Hehe." };
     private int Customer_Prideful_int = 3;
 
 
@@ -48,7 +50,21 @@ public class scr_controller : MonoBehaviour
     private string[] dishnames = { "Fried Rice", "Soup" };
 
     public List<string> dishlist = new List<string>();
-    
+
+    public void PlayCustomerIn()
+    {
+        GameObject.Find("obj_audio").GetComponent<scr_audio>().PlaySoundID(7);
+    }
+    public void PlayBell()
+    {
+        GameObject.Find("obj_audio").GetComponent<scr_audio>().PlaySoundID(11);
+    }
+    public void ReInit()
+    {
+        crnt_customer = 0;
+        isTalking = false;
+    }
+
     private void Start()
     {
         //TESTING PURPOSES
@@ -103,7 +119,7 @@ public class scr_controller : MonoBehaviour
             //Amount of Dish Types Here => (count +1)
             /*            generateddishes[i] = Random.Range(1, typesofdishes+1);
             */
-            generateddishes[i] = Random.Range(1, typesofdishes);
+            generateddishes[i] = Random.Range(1, typesofdishes+1);
         }
 
         //Amount of Dish Types Here TOO
@@ -129,8 +145,8 @@ public class scr_controller : MonoBehaviour
 
     private void Update()
     {
-
-        if (Input.GetKeyDown(KeyCode.Return) && isTalking == false && Started == false){
+        
+        if (Input.GetKeyDown(KeyCode.Space) && isTalking == false && Started == false){
             if (crnt_dialog_index < Customer_Prideful.Length)
             {
                 Customer_Speak(crnt_dialog_index);
@@ -146,6 +162,7 @@ public class scr_controller : MonoBehaviour
                 par_dialog.transform.GetChild(1).gameObject.SetActive(false);
                 /*par_dishlist.SetActive(true);*/
                 Started = true;
+                ui_button.SetActive(false);
                 StartCoroutine(StartCook());
 
             }
@@ -157,12 +174,14 @@ public class scr_controller : MonoBehaviour
         par_dishlist.GetComponent<Animator>().Play("ani_dishlist_appear");
         yield return new WaitForSeconds(2.5f);
         txttitle.Play("ani_title_appear");
-        yield return new WaitForSeconds(2f);
+        PlayBell();
+        yield return new WaitForSeconds(1f);
         objinstr.StartCook();
     }
 
     public IEnumerator GetCustomer()
     {
+        
         int generate_p = Random.Range(0, personalities-1);
 
         switch (generate_p)
@@ -178,11 +197,12 @@ public class scr_controller : MonoBehaviour
         }
         GenerateDishes();
         GetDishList(true);
-
+        PlayCustomerIn();
         par_customer.GetComponent<Animator>().Play("ani_customer_enter",0);
         yield return new WaitForSeconds(1);
         par_dialog.GetComponent<Animator>().Play("ani_dialogue_enter");
         yield return new WaitForSeconds(1);
+        ui_button.SetActive(true);
         Customer_Speak(0);
         isTalking = true;
 

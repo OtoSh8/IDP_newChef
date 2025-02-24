@@ -13,15 +13,23 @@ public class scr_instructor : MonoBehaviour
     [SerializeField] GameObject stationmix;
     [SerializeField] GameObject stationcut;
     [SerializeField] GameObject stationcutsalt;
+    [SerializeField] GameObject stationplate;
+    [SerializeField] GameObject stationserve;
 
     [Header("Station References")]
     [SerializeField] GameObject cook;
     [SerializeField] GameObject mix;
     [SerializeField] GameObject cut;
+    [SerializeField] GameObject plate;
+    [SerializeField] GameObject serve;
+
 
     [Header("Cutting Object References")]
     [SerializeField] GameObject testcut;
     [SerializeField] GameObject carrot;
+    [SerializeField] GameObject tomato;
+    [SerializeField] GameObject eggplant;
+    [SerializeField] GameObject onion;
 
     [Header("Others")]
     [SerializeField] Animator txttitle;
@@ -43,21 +51,40 @@ public class scr_instructor : MonoBehaviour
         objcam.transform.position = Vector3.Lerp(objcam.transform.position, targetObject.transform.position, moveSpeed * Time.deltaTime);
         objcam.transform.rotation = Quaternion.Slerp(objcam.transform.rotation, targetObject.transform.rotation, rotationSpeed * Time.deltaTime);
     }
-
+    public void PlayWhoosh()
+    {
+        GameObject.Find("obj_audio").GetComponent<scr_audio>().PlaySoundID(12);
+    }
     public void StartCook()
     {
-        //Get Last Dish In list
-        string[] last = controller.dishlist.Last().Split("_");
-        string dish = last[0];
-        int count = System.Convert.ToInt32(last[1]);
-        crntstep = 0;
-        crntdish = System.Convert.ToInt32(dish);
-        CookBook(crntdish, crntstep,null);
-        controller.dishlist.RemoveAt(controller.dishlist.Count()-1);
-        if((count-1) > 0)
+        if(controller.dishlist.Count > 0)
         {
-            controller.dishlist.Add(dish + "_" + count);
+            //Get Last Dish In list
+            string[] last = controller.dishlist.Last().Split("_");
+            string dish = last[0];
+            int count = System.Convert.ToInt32(last[1]);
+            crntstep = 0;
+            crntdish = System.Convert.ToInt32(dish);
+            CookBook(crntdish, crntstep, null);
+            
+            if ((count - 1) > 0)
+            {
+                Debug.Log((count - 1) + " amount of " + dish + "left");
+                controller.dishlist.RemoveAt(controller.dishlist.Count() - 1);
+                controller.dishlist.Add(dish + "_" + (count - 1));
+            }
+            else if ((count - 1) <= 0)
+            {
+                controller.dishlist.RemoveAt(controller.dishlist.Count - 1);
+                Debug.Log("LAST OF CURRENT DISH WOOHOO");
+            }
         }
+        else
+        {
+            StationServe();
+            Debug.Log("NO more dishes in line");
+        }
+        
     }
 
     private void CookBook(int dish, int step, List<GameObject> ingr)
@@ -69,7 +96,7 @@ public class scr_instructor : MonoBehaviour
                 switch (step)
                 {
                     case 0:
-                        List<GameObject> list = new List<GameObject>( new GameObject[] {carrot, carrot});
+                        List<GameObject> list = new List<GameObject>( new GameObject[] {carrot, tomato});
                         List<bool> list2 = new List<bool>(new bool[] { false, true });
                         StationCut(list, list2);
                         break;
@@ -77,17 +104,43 @@ public class scr_instructor : MonoBehaviour
                         StationMix(ingr,10);
                         break;
                     case 2:
-                        StationCook(ingr, 20, 10);
+                        StationCook(ingr, 20, 10, false);
                         
                         break;
                     case 3:
+                        StationPlate(dish);
+                        break;
+                    case 4:
                         Debug.Log("DISH IS DONE");
+                        serve.GetComponent<scr_station_serve>().AddDish(dish);
+                        StartCook();
                         break;
                 }
                 break;
             case 2:
                 //Soup
-
+                switch (step)
+                {
+                    case 0:
+                        List<GameObject> list = new List<GameObject>(new GameObject[] { onion, carrot, tomato });
+                        List<bool> list2 = new List<bool>(new bool[] { false, false, true });
+                        StationCut(list, list2);
+                        break;
+                    case 1:
+                        StationMix(ingr, 10);
+                        break;
+                    case 2:
+                        StationCook(ingr, 20, 20, true);
+                        break;
+                    case 3:
+                        StationPlate(dish);
+                        break;
+                    case 4:
+                        Debug.Log("DISH IS DONE");
+                        serve.GetComponent<scr_station_serve>().AddDish(dish);
+                        StartCook();
+                        break;
+                }
                 break;
         }
     }
@@ -107,11 +160,13 @@ public class scr_instructor : MonoBehaviour
     {
         //Gameobject Array, if needed to be salted, same index on boolean array will be true!!!
         cut.GetComponent<scr_station_cut>().enabled = true;
+        cut.GetComponent<scr_station_cut>().ToCut.Clear();
+        cut.GetComponent<scr_station_cut>().ToSalt.Clear();
         cut.GetComponent<scr_station_cut>().ToCut = cutted;
         cut.GetComponent<scr_station_cut>().ToSalt = salt;
         cut.GetComponent<scr_station_cut>().StartCut();
 
-        //Move Camera
+        PlayWhoosh();
         targetObject = stationcut;
     }
 
@@ -119,18 +174,33 @@ public class scr_instructor : MonoBehaviour
     {
         mix.GetComponent<scr_mixer>().enabled = true;
         mix.GetComponent<scr_mixer>().Reinit(goal,cutted);
-
+        PlayWhoosh();
         targetObject = stationmix;
     }
 
-    private void StationCook(List<GameObject> cutted, int target, int length)
+    private void StationCook(List<GameObject> cutted, int target, int length, bool pot)
     {
         cook.GetComponent<scr_cook>().enabled = true;
         cook.GetComponent<scr_cook>().ReInit(cutted);
         cook.GetComponent<scr_cook>().targettime = length;
         cook.GetComponent<scr_cook>().targetvalue = target;
-
+        cook.GetComponent<scr_cook>().pot(pot);
+        PlayWhoosh();
         targetObject = stationcook;
+    }
+
+    private void StationPlate(int dish)
+    {
+        plate.GetComponent<scr_station_plate>().ReInit(dish);
+        PlayWhoosh();
+        targetObject = stationplate;
+    }
+
+    private void StationServe()
+    {
+        serve.GetComponent<scr_station_serve>().readytoserve = true;
+        targetObject = stationserve;
+
     }
 }
 

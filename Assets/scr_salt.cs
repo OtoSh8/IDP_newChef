@@ -12,7 +12,10 @@ public class scr_salt : MonoBehaviour
 
     public int amt = 0;
 
-
+    public void PlayShake()
+    {
+        GameObject.Find("obj_audio").GetComponent<scr_audio>().PlaySoundID(2);
+    }
     private void Start()
     {
         animator = GetComponent<Animator>();

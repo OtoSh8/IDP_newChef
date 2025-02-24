@@ -28,11 +28,13 @@ public class scr_knife : MonoBehaviour
 
     [SerializeField] GameObject parsalt;
     private bool isSalting = false;
+    [SerializeField] public GameObject ui_icon_cut;
+    [SerializeField] public GameObject ui_icon_salt;
 
     public void Reinit()
     {
         slicedcount = 0;
-        this.transform.parent.parent.localPosition = new Vector3(0,0,0);
+        /*this.transform.parent.parent.localPosition = new Vector3(0,0,0);*/
         cutting = false;
         cutpar = null;
         
@@ -42,13 +44,17 @@ public class scr_knife : MonoBehaviour
     {
         if (isSalting)
         {
-            if(parsalt.GetComponent<scr_salt>().amt > 10)
+            ui_icon_cut.SetActive(false);
+            ui_icon_salt.SetActive(true);
+            if (parsalt.GetComponent<scr_salt>().amt > 10)
             {
                 FinishSalting();
             }
         }
         else
         {
+            ui_icon_salt.SetActive(false);
+            ui_icon_cut.SetActive(true);
             return;
         }
     }
@@ -98,6 +104,11 @@ public class scr_knife : MonoBehaviour
             slicedcount++;
         }
     }
+    public void PosStart( float x)
+    {
+        this.transform.parent.parent.gameObject.transform.position = new Vector3(slicespawn.transform.position.x - (x/2) + (x/6), this.gameObject.transform.parent.parent.position.y, this.transform.parent.parent.gameObject.transform.position.z);
+        Debug.Log("STARTPOS");
+    }
 
     public void Repos()
     {
@@ -112,10 +123,11 @@ public class scr_knife : MonoBehaviour
         }
         else if (salt == false)
         {
-                cutpar.SetActive(false);
+            cutpar.SetActive(false);
                 cutpars.Add(cutpar);
                 Debug.Log(cutpars.Count);
-                mainguy.StartCut();
+            ui_icon_cut.SetActive(false);
+            mainguy.StartCut();
         }
     }
 
@@ -139,7 +151,7 @@ public class scr_knife : MonoBehaviour
 
     void SetupSlicedObject(GameObject obj,bool upper)
     {
-        obj.AddComponent<MeshCollider>().convex = true;  // Add collider
+        obj.AddComponent<BoxCollider>();  // Add collider
         var rgd = obj.AddComponent<Rigidbody>();  // Enable physics
         rgd.mass = 100;
         rgd.linearDamping = 10;
