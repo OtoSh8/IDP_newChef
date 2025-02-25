@@ -29,12 +29,16 @@ public class scr_station_plate : MonoBehaviour
     [SerializeField] GameObject plateoutline;
     private Material mat_friedrice;
     private Material mat_soup;
+    private Material mat_steak;
+
+    private bool ready = false;
 
     private void Start()
     {
         original = pot.position;
         mat_friedrice = scr.mat_friedrice;
         mat_soup = scr.mat_soup;
+        mat_steak = scr.mat_steak;
     }
 
     public void ReInit(int dish)
@@ -47,6 +51,7 @@ public class scr_station_plate : MonoBehaviour
         pot.gameObject.SetActive(false);
         this.GetComponent<Animator>().Play("ani_plate_og");
         plateoutline.SetActive(true);
+        ready = false;
     }
 
     public void Update()
@@ -55,7 +60,7 @@ public class scr_station_plate : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space) && platdown == false)
             {
-                plateoutline.SetActive(false);
+
                 this.GetComponent<Animator>().Play("ani_plate_show");
                 platdown = true;
                 StartCoroutine(ShowTimebar());
@@ -84,7 +89,7 @@ public class scr_station_plate : MonoBehaviour
                 timebar.value = ((float)crntno)/100f;
                 pot.transform.position = posog + new Vector3(timebar.value*movespeed, 0,0);
 
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (Input.GetKeyDown(KeyCode.Space) && ready)
                 {
                     if(crntno <= targno && crntno > targno - 10)
                     {
@@ -108,7 +113,13 @@ public class scr_station_plate : MonoBehaviour
     public void PlayPlate()
     {
         GameObject.Find("obj_audio").GetComponent<scr_audio>().PlaySoundID(3);
+        plateoutline.SetActive(false);
 
+    }
+
+    public void PlayDrag()
+    {
+        GameObject.Find("obj_audio").GetComponent<scr_audio>().PlaySoundID(13);
     }
     IEnumerator ShowTimebar()
     {
@@ -127,10 +138,17 @@ public class scr_station_plate : MonoBehaviour
                 pot.transform.GetChild(0).gameObject.SetActive(true);
                 pot.transform.GetChild(0).transform.GetChild(0).GetComponent<MeshRenderer>().material = mat_soup;
                 break;
+            case 3:
+                //STK
+                pot.transform.GetChild(1).gameObject.SetActive(true);
+                pot.transform.GetChild(0).gameObject.SetActive(false);
+                pot.transform.GetChild(1).transform.GetChild(0).GetComponent<MeshRenderer>().material = mat_steak;
+                break;
         }
         pot.gameObject.SetActive(true);
         timebar.gameObject.transform.parent.gameObject.SetActive(true);
         pot.gameObject.SetActive(true);
+        ready = true;
         yield return null;
     }
 
@@ -147,6 +165,10 @@ public class scr_station_plate : MonoBehaviour
             case 2:
                 //S
                 mat = mat_soup;
+                break;
+            case 3:
+                //S
+                mat = mat_steak;
                 break;
         }
 

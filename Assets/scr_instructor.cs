@@ -30,6 +30,9 @@ public class scr_instructor : MonoBehaviour
     [SerializeField] GameObject tomato;
     [SerializeField] GameObject eggplant;
     [SerializeField] GameObject onion;
+    [SerializeField] GameObject potato;
+    [SerializeField] GameObject meat;
+    [SerializeField] GameObject butter;
 
     [Header("Others")]
     [SerializeField] Animator txttitle;
@@ -96,21 +99,18 @@ public class scr_instructor : MonoBehaviour
                 switch (step)
                 {
                     case 0:
-                        List<GameObject> list = new List<GameObject>( new GameObject[] {carrot, tomato});
+                        List<GameObject> list = new List<GameObject>( new GameObject[] {carrot, meat});
                         List<bool> list2 = new List<bool>(new bool[] { false, true });
                         StationCut(list, list2);
                         break;
                     case 1:
-                        StationMix(ingr,10);
-                        break;
-                    case 2:
                         StationCook(ingr, 20, 10, false);
                         
                         break;
-                    case 3:
+                    case 2:
                         StationPlate(dish);
                         break;
-                    case 4:
+                    case 3:
                         Debug.Log("DISH IS DONE");
                         serve.GetComponent<scr_station_serve>().AddDish(dish);
                         StartCook();
@@ -122,8 +122,8 @@ public class scr_instructor : MonoBehaviour
                 switch (step)
                 {
                     case 0:
-                        List<GameObject> list = new List<GameObject>(new GameObject[] { onion, carrot, tomato });
-                        List<bool> list2 = new List<bool>(new bool[] { false, false, true });
+                        List<GameObject> list = new List<GameObject>(new GameObject[] { onion, carrot, tomato, potato });
+                        List<bool> list2 = new List<bool>(new bool[] { false, false, true, false });
                         StationCut(list, list2);
                         break;
                     case 1:
@@ -136,6 +136,28 @@ public class scr_instructor : MonoBehaviour
                         StationPlate(dish);
                         break;
                     case 4:
+                        Debug.Log("DISH IS DONE");
+                        serve.GetComponent<scr_station_serve>().AddDish(dish);
+                        StartCook();
+                        break;
+                }
+                break;
+            case 3:
+                //Steak
+                switch (step)
+                {
+                    case 0:
+                        List<GameObject> list = new List<GameObject>(new GameObject[] { meat, butter});
+                        List<bool> list2 = new List<bool>(new bool[] { true, false});
+                        StationCut(list, list2);
+                        break;
+                    case 1:
+                        StationCook(ingr, 20, 20, false);
+                        break;
+                    case 2:
+                        StationPlate(dish);
+                        break;
+                    case 3:
                         Debug.Log("DISH IS DONE");
                         serve.GetComponent<scr_station_serve>().AddDish(dish);
                         StartCook();

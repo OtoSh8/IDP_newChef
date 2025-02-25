@@ -16,6 +16,7 @@ public class scr_cook : MonoBehaviour
     [SerializeField] public Material mat_water;
     [SerializeField] public Material mat_friedrice;
     [SerializeField] public Material mat_soup;
+    [SerializeField] public Material mat_steak;
 
 
     [Header("Stovetop left/right References")]
@@ -45,7 +46,7 @@ public class scr_cook : MonoBehaviour
     public bool sel_side = false;
     private bool final = false;
 
-    List<GameObject> ingr = new List<GameObject>();
+    public List<GameObject> ingr = new List<GameObject>();
 
     public bool pots = false;
 
@@ -74,13 +75,13 @@ public class scr_cook : MonoBehaviour
         GameObject.Find("obj_audio").GetComponent<scr_audio>().PlaySoundID(4);
 
     }
-    private IEnumerator FinishCooking()
+    private void FinishCooking()
     {
         cooking = false;
-        final = true;
+        
         
         objcooker.Play("ani_cook_idle");
-        ui_knob.SetActive(false);
+        ui_knob.SetActive(true);
 
         foreach (GameObject go in ingr)
         {
@@ -102,11 +103,26 @@ public class scr_cook : MonoBehaviour
                     
                     objpot.transform.GetChild(0).GetComponent<MeshRenderer>().material = mat_soup;
                     break;
+                case 3:
+                    finished_left.SetActive(true);
+                    finished_left.GetComponent<MeshRenderer>().material = mat_steak;
+                    break;
 
             }
         }
+        final = true;
+
+
+        
+    }
+
+    private IEnumerator Finished()
+    {
+        final = false;
+        Debug.Log("ACTIVATED");
         isplayingaud = false;
         GameObject.Find("obj_audio").GetComponent<scr_audio>().StopAllLoop();
+
         yield return new WaitForSeconds(2f);
 
         crnt_time = 0;
@@ -116,21 +132,20 @@ public class scr_cook : MonoBehaviour
         ui_knob.SetActive(false);
         ui_slider.gameObject.SetActive(false);
         instr.FinishStep(null);
-        
-        this.GetComponent<scr_cook>().enabled = false;
 
-        
+        this.GetComponent<scr_cook>().enabled = false;
     }
 
     public void ReInit(List<GameObject> cutted)
     {
-        ingr = cutted;
         crnt_time = 0;
         leftValue = 0;
         rightValue = 0;
         final = false;
         foreach (GameObject obj in cutted)
         {
+            ingr.Add(obj);
+            obj.SetActive(true);
             foreach(Transform t in obj.transform)
             {
                 t.localPosition = new Vector3(0, 0, 0);
@@ -176,16 +191,23 @@ public class scr_cook : MonoBehaviour
             }
             
             ui_slider.value = (float)crnt_time/targettime;
+
             if (crnt_time > targettime)
             {
-                Debug.Log("FINISHED COOKING CUH");
-                if (!final)
-                {
-                    StartCoroutine(FinishCooking());
-                }
+                    FinishCooking();
                 
                 
             }
+        }
+        else if (final)
+        {
+            ui_knob.SetActive(true);
+            if (leftValue <= 5)
+            {
+                ui_knob.SetActive(false);
+                StartCoroutine(Finished());
+            }
+
         }
         else
         {
@@ -225,9 +247,15 @@ public class scr_cook : MonoBehaviour
                 if (leftValue > targetvalue)
                 {
                     objectToToggle.SetActive(true); // Enable the GameObject
-                    ui_knob.SetActive(false);
-                    ui_slider.gameObject.SetActive(true);
-                    cooking = true;
+                    if (!final)
+                    {
+                        ui_knob.SetActive(false);
+                        ui_slider.gameObject.SetActive(true);
+                        cooking = true;
+                    }
+                    
+                    
+                    
 
                 }
                 else

@@ -46,8 +46,8 @@ public class scr_controller : MonoBehaviour
     //FOOD TYPES
     //1 Fried Rice
     //2 Soup
-    private int typesofdishes = 2;
-    private string[] dishnames = { "Fried Rice", "Soup" };
+    private int typesofdishes = 3;
+    private string[] dishnames = { "Fried Rice", "Soup", "Steak" };
 
     public List<string> dishlist = new List<string>();
 
@@ -63,14 +63,25 @@ public class scr_controller : MonoBehaviour
     {
         crnt_customer = 0;
         isTalking = false;
+        dishlist.Clear();
+        crnt_dialog_index = 0;
+        Started = false;
+        isTalking=false;
+        obj_textfield_dishlist.text = "";
     }
 
     private void Start()
     {
         //TESTING PURPOSES
 
-        StartCoroutine(GetCustomer());
+        GetCust();
         /*obj_textfield_dialog.gameObject.GetComponent<TMPWriter>().OnFinishWriter.AddListener(HandleWriterFinished);*/
+    }
+
+    public void GetCust()
+    {
+        ReInit();
+        StartCoroutine(GetCustomer());
     }
 
     string GetDishList(bool settext)
@@ -181,7 +192,7 @@ public class scr_controller : MonoBehaviour
 
     public IEnumerator GetCustomer()
     {
-        
+
         int generate_p = Random.Range(0, personalities-1);
 
         switch (generate_p)
