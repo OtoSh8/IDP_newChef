@@ -163,6 +163,11 @@ public class scr_cook : MonoBehaviour
 
     }
 
+    public void UpdateVal(int i)
+    {
+        leftValue = i;
+    }
+
     void Update()
     {
         
@@ -229,6 +234,7 @@ public class scr_cook : MonoBehaviour
             case false:
                 objectToToggle = fire_left;
                 targetObject = knob_left;
+
                 // Adjust the value with arrow keys
                 if (Input.GetKey(KeyCode.RightArrow))
                 {
@@ -238,6 +244,7 @@ public class scr_cook : MonoBehaviour
                 {
                     leftValue = Mathf.Max(leftValue - 1, 0); // Decrease value, min 0
                 }
+                
 
                 // Rotate the GameObject based on the value
                 float rotationY = (leftValue / 100f) * 360f; // Map value to 0-360 degrees

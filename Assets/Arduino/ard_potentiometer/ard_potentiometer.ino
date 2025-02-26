@@ -25,6 +25,6 @@ void loop() {
   }
 
   average = total / numReadings;
-  Serial.println(average);
+  Serial.println(average/10);
   delay(1);  // delay in between reads for stability
 }

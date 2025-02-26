@@ -12,13 +12,24 @@ public class scr_sel : MonoBehaviour
     [SerializeField] TextMeshProUGUI desc;
     [SerializeField] Slider slider;
     [SerializeField] TextMeshProUGUI sliderval;
+    [SerializeField] Slider orgsliderval;
+    [SerializeField] Slider grnsliderval;
+
     [SerializeField] TextMeshProUGUI txt_totalspent;
 
+    //carrot, tomato, onion, eggplant, potato, meat
+
     int[] prices = { 10, 10, 10, 0, 0, 20, 0, 0 };
-    int[] amountingr = {0,2,0,0,0,0,0,0};
+    int[] amountingr = { 2, 1, 1, 0, 1, 1, 0, 0 };
+
+    int[] amountmax =    { 20, 10, 10, 1, 10, 10, 0, 0 };
+    int[] amountorange = { 12, 8, 7, 0, 7, 6, 0, 0 };
+    int[] amountavg =    { 6, 4, 4, 0, 4, 4, 0, 0 };
+    int[] amountmin =    { 2, 1, 1, 0, 1, 1, 0, 0 };
 
     private void Start()
     {
+        GameObject.Find("obj_var").transform.GetChild(0).gameObject.SetActive(true);
         SelectContainer();
     }
     private void Update()
@@ -116,9 +127,21 @@ public class scr_sel : MonoBehaviour
                 break;
 
         }
-        slider.value = amountingr[sel];
+        
         sliderval.text = amountingr[sel].ToString();
 
+        
+
+        slider.maxValue = amountmax[sel];
+        slider.minValue = amountmin[sel];
+        grnsliderval.maxValue = amountmax[sel];
+        grnsliderval.minValue = amountmin[sel];
+        orgsliderval.maxValue = amountmax[sel];
+        orgsliderval.minValue = amountmin[sel];
+
+        grnsliderval.value = amountavg[sel];
+        orgsliderval.value = amountorange[sel];
+        slider.value = amountingr[sel];
     }
 
     public void StartGame()

@@ -3,12 +3,12 @@ using System.IO.Ports;
 using System.Threading;
 using UnityEngine.SceneManagement;
 
-public class scr_serialhandler : MonoBehaviour
+public class scr_cook_serial : MonoBehaviour
 {
 
     private int current;
 
-    public static string knifeport = "COM16"; // Change COM port if necessary
+    public static string knifeport = "COM3"; // Change COM port if necessary
     private SerialPort sp;
     private Thread IOThread;
     private bool threadRunning = false;
@@ -59,25 +59,11 @@ public class scr_serialhandler : MonoBehaviour
             if (!string.IsNullOrEmpty(incoming))
             {
                 Debug.Log("Received: " + incoming);
-                if(System.Convert.ToInt16(incoming) > current)
-                {
+                
                     current = System.Convert.ToInt16(incoming);
-                    
-                    if(SceneManager.GetActiveScene().name == "scn_start")
-                    {
-                        GameObject.Find("obj_start").GetComponent<scr_start>().StartGame();
-                    }
-                    else if (SceneManager.GetActiveScene().name == "scn_preplay")
-                    {
-                        GameObject.Find("obj_selector").GetComponent<scr_sel>().StartGame();
-                    }
-                    else if (SceneManager.GetActiveScene().name == "scn_play")
-                    {
-                        GameObject.Find("obj_station_cut").GetComponent<scr_station_cut>().Cut();
-                    }
-                                
+                    this.GetComponent<scr_cook>().UpdateVal(100-current);
 
-                }
+                
 
                 incoming = ""; // Clear after reading
             }

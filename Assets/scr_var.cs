@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class scr_var : MonoBehaviour
 {
-    public int money = 1000;
+    public int money = 0;
     public float time = 21600;
     public float timemultiplier;
 
@@ -12,9 +12,14 @@ public class scr_var : MonoBehaviour
     [SerializeField] TextMeshProUGUI moneytxt;
     [SerializeField] TextMeshProUGUI timetxt;
 
+    public int[] amountingr = {0,0,0,0,0,0,0,0};
+
+
     void Start()
     {
         DontDestroyOnLoad(this.gameObject);
+        AddMoney(1000);
+        UpdateMoney();
     }
 
     private void Update()
