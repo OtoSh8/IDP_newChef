@@ -8,7 +8,7 @@ public class scr_cook_serial : MonoBehaviour
 
     private int current;
 
-    public static string knifeport = "COM3"; // Change COM port if necessary
+    public static string knifeport = "COM7"; // Change COM port if necessary
     private SerialPort sp;
     private Thread IOThread;
     private bool threadRunning = false;

@@ -16,6 +16,10 @@ public class scr_station_serve : MonoBehaviour
     {
         totalmoney = 0;
         readytoserve = false;
+        crntamt = 0;
+        foreach(Transform child in par_toserve.transform){
+            child.gameObject.SetActive(false);
+        }
     }
 
     private void Update()
@@ -61,8 +65,9 @@ public class scr_station_serve : MonoBehaviour
     {
         PlayCash();
         GameObject.Find("obj_var").GetComponent<scr_var>().AddMoney(totalmoney);
-        GameObject.Find("npc").GetComponent<Animator>().Play("ani_customer_exit");
         ReInit();
+
+        GameObject.Find("npc").GetComponent<Animator>().Play("ani_customer_exit");
     }
 
     private void PlayCash()

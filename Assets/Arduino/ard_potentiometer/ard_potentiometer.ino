@@ -4,7 +4,7 @@ int readings[numReadings];  // the readings from the analog input
 int readIndex = 0;          // the index of the current reading
 int total = 0;              // the running total
 int average = 0;            // the average
-
+int crntamt = 0;
 int inputPin = A1;
 
 void setup() {
@@ -25,6 +25,9 @@ void loop() {
   }
 
   average = total / numReadings;
-  Serial.println(average/10);
+  if(crntamt != average/10){
+      Serial.println(average/10);
+    crntamt = average/10;
+  }
   delay(1);  // delay in between reads for stability
 }

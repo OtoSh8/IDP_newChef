@@ -73,7 +73,7 @@ public class scr_serialhandler : MonoBehaviour
                     }
                     else if (SceneManager.GetActiveScene().name == "scn_play")
                     {
-                        GameObject.Find("obj_station_cut").GetComponent<scr_station_cut>().Cut();
+                        GameObject.Find("station_cut").GetComponent<scr_station_cut>().Cut();
                     }
                                 
 
