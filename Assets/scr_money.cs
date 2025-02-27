@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class scr_money : MonoBehaviour
 {
-    public void UpdateMoney()
+    public void UpdateMoneyLmao()
     {
-        GameObject.Find("obj_var").GetComponent<scr_var>().UpdateMoney();
+        GameObject.Find("obj_var").GetComponent<scr_var>().UpdateMoneyText();
     }
 }

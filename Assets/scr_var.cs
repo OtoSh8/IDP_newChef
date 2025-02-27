@@ -14,16 +14,19 @@ public class scr_var : MonoBehaviour
 
     public int[] amountingr = {0,0,0,0,0,0,0,0};
 
-
     void Start()
     {
         DontDestroyOnLoad(this.gameObject);
         AddMoney(1000);
-        UpdateMoney();
+        UpdateMoneyText();
     }
 
     private void Update()
     {
+        if(Input.GetKeyDown(KeyCode.V))
+        {
+            AddMoney(100);
+        }
         if (isTime)
         {
             SetTime();
@@ -68,7 +71,7 @@ public class scr_var : MonoBehaviour
         money += mon;
     }
 
-    public void UpdateMoney()
+    public void UpdateMoneyText()
     {
         moneytxt.text = money.ToString();
     }

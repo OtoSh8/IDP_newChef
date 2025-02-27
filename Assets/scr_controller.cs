@@ -33,8 +33,10 @@ public class scr_controller : MonoBehaviour
     private bool Started = false;
 
     [Header("Personality Preferences")]
-    public int personalities = 1;
+    public int personalities = 2;
     private string[] Customer_Prideful = { "Hello there sir,<!wait=0.5> its such a <b><+shake><funky> Greeaaaaat </b></funky></+shake> day today huh?<!wait=1>", "Anyways,<!wait=0.2> I'm feeling <!delay=0.2><+shake> very hungry <!delay=0.02> </+shake> so I'll have $<!wait=1>", "I'm looking forward to enjoying a <wave><!delay=0.1>hugeeeeee<!delay=0.02></wave> feastttt.<!wait=0.2> Hehe." };
+    private string[] Customer_Saving = { "Hello there, I'd like to have <!delay=0.2> maybe.....<!delay=0.02> <shake>Ahhh</shake>,<!wait=0.2> I don't know<!delay=0.1>....<!delay=0.02>", "<+shake><sketchy>Uhhhhhh</sketchy></+shake>,<!wait=0.2> how about<!delay=0.1>...<!wait=0.2><!delay=0.02> maybe not<!delay=0.1>....<!delay=0.02>", "<+grow>Oh</+grow>,<!wait=0.2> I'm sorry for holding up the line, I think I'll just have $" };
+
     private int Customer_Prideful_int = 3;
 
 
@@ -119,6 +121,11 @@ public class scr_controller : MonoBehaviour
                 x[0] = 3;
                 x[1] = 4;
                 break;
+            case 1:
+                //Saving Dish Count Range
+                x[0] = 1;
+                x[1] = 2;
+                break;
         }
 
         int howmanydishes = Random.Range(x[0], x[1]+1);
@@ -193,7 +200,7 @@ public class scr_controller : MonoBehaviour
     public IEnumerator GetCustomer()
     {
 
-        int generate_p = Random.Range(0, personalities-1);
+        int generate_p = Random.Range(0, personalities);
 
         switch (generate_p)
         {
@@ -202,9 +209,10 @@ public class scr_controller : MonoBehaviour
                  crnt_customer = 0;
                 break;
             case 1:
+                //Saving
+                crnt_customer = 1;
                 break;
-            case 2:
-                break;
+            
         }
         GenerateDishes();
         GetDishList(true);
@@ -230,6 +238,9 @@ public class scr_controller : MonoBehaviour
         {
             case 0:
                 getnextdialog = Customer_Prideful[x];
+                break;
+            case 1:
+                getnextdialog = Customer_Saving[x];
                 break;
         }
 

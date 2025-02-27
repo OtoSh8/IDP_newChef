@@ -765,6 +765,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5330357720469377204, guid: b2556dbdc88ac1c4a84701992c2af9dd, type: 3}
+      propertyPath: m_fontColor.a
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8282808404442204239, guid: b2556dbdc88ac1c4a84701992c2af9dd, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5.450421

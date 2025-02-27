@@ -886,7 +886,7 @@ MonoBehaviour:
   obj_textfield_dialog: {fileID: 1779467454}
   obj_textfield_dishlist: {fileID: 1525281756}
   txttitle: {fileID: 1970909325}
-  personalities: 1
+  personalities: 2
   revealSpeed: 0.5
   dishlist: []
 --- !u!4 &55749999
