@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class scr_station_serve : MonoBehaviour
@@ -12,6 +13,10 @@ public class scr_station_serve : MonoBehaviour
     [SerializeField] Material soup;
     [SerializeField] Material steak;
 
+    [SerializeField] scr_station_closing closing;
+
+    List<int> dishes = new List<int>();
+
     public void ReInit()
     {
         totalmoney = 0;
@@ -20,6 +25,8 @@ public class scr_station_serve : MonoBehaviour
         foreach(Transform child in par_toserve.transform){
             child.gameObject.SetActive(false);
         }
+
+        dishes.Clear();
     }
 
     private void Update()
@@ -57,6 +64,7 @@ public class scr_station_serve : MonoBehaviour
                 totalmoney += 25;
                 break;
         }
+        dishes.Add(no);
         crntamt++;
 
     }
@@ -65,6 +73,8 @@ public class scr_station_serve : MonoBehaviour
     {
         PlayCash();
         GameObject.Find("obj_var").GetComponent<scr_var>().AddMoney(totalmoney);
+        dishes.Insert(0,GameObject.Find("obj_controller").GetComponent<scr_controller>().crnt_customer);
+        closing.History.Add(dishes.ToArray());
         ReInit();
 
         GameObject.Find("npc").GetComponent<Animator>().Play("ani_customer_exit");

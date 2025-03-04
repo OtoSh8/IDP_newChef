@@ -28,7 +28,7 @@ public class scr_controller : MonoBehaviour
     private int crnt_dialog_index = 0;
 
     private bool isTalking = false;
-    private int crnt_customer;
+    public int crnt_customer;
 
     private bool Started = false;
 
