@@ -1,7 +1,3 @@
-/*
-    Arduino and ADXL345 Accelerometer - 3D Visualization Example 
-     by Dejan, https://howtomechatronics.com
-*/
 #include <Wire.h>  // Wire library - used for I2C communication
 
 int ADXL345 = 0x53; // The ADXL345 sensor I2C address
@@ -52,11 +48,12 @@ void loop() {
   Wire.beginTransmission(ADXL345);
   Wire.write(0x32); // Start with register 0x32 (ACCEL_XOUT_H)
   Wire.endTransmission(false);
+
   Wire.requestFrom(ADXL345, 6, true); // Read 6 registers total, each axis value is stored in 2 registers
   X_out = ( Wire.read() | Wire.read() << 8); // X-axis value
   X_out = X_out / 256; //For a range of +-2g, we need to divide the raw values by 256, according to the datasheet
   Y_out = ( Wire.read() | Wire.read() << 8); // Y-axis value
-  Y_out = Y_out / 256;
+  Y_out = Y_out / 256;  
   Z_out = ( Wire.read() | Wire.read() << 8); // Z-axis value
   Z_out = Z_out / 256;
 
@@ -68,24 +65,10 @@ void loop() {
   rollF = 0.94 * rollF + 0.06 * roll;
   pitchF = 0.94 * pitchF + 0.06 * pitch;
 
-  // Serial.print(rollF);
-  // Serial.print("/");
-  // Serial.println(pitchF);
   reactdata(pitchF);
 }
 
 void reactdata(float dat){
-  // int simplified = round(dat/10);
-  // // Serial.println(simplified);
-  // if(simplified >= 3){
-  //   up = true;
-  // }
-  // else if(simplified < 3 && up == true){
-
-  //   cutamt++;
-  //       // Serial.println(cutamt);
-  //   up = false;
-  // }
 
   if(dat > 20){
     if(up == false){
