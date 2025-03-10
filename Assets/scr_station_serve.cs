@@ -71,13 +71,23 @@ public class scr_station_serve : MonoBehaviour
 
     private void OnServe()
     {
-        PlayCash();
-        GameObject.Find("obj_var").GetComponent<scr_var>().AddMoney(totalmoney);
-        dishes.Insert(0,GameObject.Find("obj_controller").GetComponent<scr_controller>().crnt_customer);
-        closing.History.Add(dishes.ToArray());
-        ReInit();
+        if(GameObject.Find("obj_controller").GetComponent<scr_controller>() != null)
+        {
+            PlayCash();
+            GameObject.Find("obj_var").GetComponent<scr_var>().AddMoney(totalmoney);
+            GameObject.Find("station_closing").GetComponent<scr_station_closing>().totalearnt += totalmoney;
+            dishes.Insert(0, GameObject.Find("obj_controller").GetComponent<scr_controller>().crnt_customer);
+            closing.History.Add(dishes.ToArray());
+            ReInit();
 
-        GameObject.Find("npc").GetComponent<Animator>().Play("ani_customer_exit");
+            GameObject.Find("npc").GetComponent<Animator>().Play("ani_customer_exit");
+            GameObject.Find("par_dishlist").GetComponent<Animator>().Play("ani_dishlist_hidden");
+        }
+        else
+        {
+
+        }
+        
     }
 
     private void PlayCash()

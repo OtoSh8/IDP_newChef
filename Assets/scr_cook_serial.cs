@@ -16,7 +16,7 @@ public class scr_cook_serial : MonoBehaviour
 
     private void Start()
     {
-        DontDestroyOnLoad(this);
+
 
         // Initialize serial port
         sp = new SerialPort(knifeport, 9600);
@@ -29,10 +29,13 @@ public class scr_cook_serial : MonoBehaviour
             threadRunning = true;
             IOThread = new Thread(DataThread);
             IOThread.Start();
+
+            DontDestroyOnLoad(this);
         }
         catch (System.Exception e)
         {
             Debug.LogError("Failed to open serial port: " + e.Message);
+            this.enabled = false;
         }
     }
 

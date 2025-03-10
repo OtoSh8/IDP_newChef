@@ -61,19 +61,42 @@ public class scr_knife : MonoBehaviour
 
     public void StartSalting()
     {
+        GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler>().ChangePhase(2);
+
         parsalt.SetActive(true);
         parsalt.GetComponent<scr_salt>().amt = 0;
         isSalting = true;
-        GameObject.Find("obj_instructor").GetComponent<scr_instructor>().targetObject = campos;
+
+        if(GameObject.Find("obj_instructor").GetComponent<scr_instructor>() != null)
+        {
+            GameObject.Find("obj_instructor").GetComponent<scr_instructor>().targetObject = campos;
+        }
+        else
+        {
+            GameObject.Find("obj_instructor").GetComponent<scr_instructor_tutorial>().targetObject = campos;
+        }
+        
+
         this.transform.parent.GetComponent<MeshRenderer>().enabled = false;
     }
 
     public void FinishSalting()
     {
+        GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler>().ChangePhase(1);
+
         isSalting = false;
         parsalt.SetActive(false);
         salt = false;
-        GameObject.Find("obj_instructor").GetComponent<scr_instructor>().targetObject = camposstation;
+        if (GameObject.Find("obj_instructor").GetComponent<scr_instructor>() != null)
+        {
+            GameObject.Find("obj_instructor").GetComponent<scr_instructor>().targetObject = camposstation;
+        }
+        else
+        {
+            GameObject.Find("obj_instructor").GetComponent<scr_instructor_tutorial>().targetObject = camposstation;
+        }
+
+        
         this.transform.parent.GetComponent<MeshRenderer>().enabled = true;
         Repos();
     }

@@ -22,6 +22,7 @@ public class scr_station_plate : MonoBehaviour
     [SerializeField] Slider timebargoal;
 
     [SerializeField] scr_instructor instr;
+    [SerializeField] scr_instructor_tutorial instrtut;
 
     [Header("Food Material References")]
     [SerializeField] scr_cook scr;
@@ -186,7 +187,17 @@ public class scr_station_plate : MonoBehaviour
         platdown = false;
         plate.transform.GetChild(0).gameObject.SetActive(false);
         hit = false;
-        instr.FinishStep(null);
-        
+
+        if(instr != null)
+        {
+            instr.FinishStep(null);
+
+        }
+        else
+        {
+            instrtut.FinishStep(null);
+
+        }
+
     }
 }

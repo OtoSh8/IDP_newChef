@@ -28,6 +28,7 @@ public class scr_cook : MonoBehaviour
     public GameObject fire_right;
     public Transform Spawn_left;
     public scr_instructor instr;
+    public scr_instructor_tutorial instrtut;
 
     public GameObject finished_left;
     public GameObject finished_left_pot;
@@ -93,22 +94,45 @@ public class scr_cook : MonoBehaviour
         if (!sel_side)
         {
             finished_left.SetActive(true);
-            switch (GameObject.Find("obj_instructor").GetComponent<scr_instructor>().crntdish)
+            if(instr != null)
             {
-                case 1:
+                switch (instr.crntdish)
+                {
+                    case 1:
                         finished_left.SetActive(true);
                         finished_left.GetComponent<MeshRenderer>().material = mat_friedrice;
-                    break;
-                case 2:
-                    
-                    objpot.transform.GetChild(0).GetComponent<MeshRenderer>().material = mat_soup;
-                    break;
-                case 3:
-                    finished_left.SetActive(true);
-                    finished_left.GetComponent<MeshRenderer>().material = mat_steak;
-                    break;
+                        break;
+                    case 2:
 
+                        objpot.transform.GetChild(0).GetComponent<MeshRenderer>().material = mat_soup;
+                        break;
+                    case 3:
+                        finished_left.SetActive(true);
+                        finished_left.GetComponent<MeshRenderer>().material = mat_steak;
+                        break;
+
+                }
             }
+            else
+            {
+                switch (instrtut.crntdish)
+                {
+                    case 1:
+                        finished_left.SetActive(true);
+                        finished_left.GetComponent<MeshRenderer>().material = mat_friedrice;
+                        break;
+                    case 2:
+
+                        objpot.transform.GetChild(0).GetComponent<MeshRenderer>().material = mat_soup;
+                        break;
+                    case 3:
+                        finished_left.SetActive(true);
+                        finished_left.GetComponent<MeshRenderer>().material = mat_steak;
+                        break;
+
+                }
+            }
+            
         }
         final = true;
 
@@ -131,8 +155,16 @@ public class scr_cook : MonoBehaviour
         cooking = false;
         ui_knob.SetActive(false);
         ui_slider.gameObject.SetActive(false);
-        instr.FinishStep(null);
 
+        if (instr != null)
+        {
+            instr.FinishStep(null);
+        }
+        else
+        {
+            instrtut.FinishStep(null);
+
+        }
         this.GetComponent<scr_cook>().enabled = false;
     }
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class scr_station_cut : MonoBehaviour
 {
     [SerializeField] private scr_instructor instr;
+    [SerializeField] private scr_instructor_tutorial instrtut;
 
     [SerializeField] private Transform cutspawn;
 
@@ -20,6 +21,11 @@ public class scr_station_cut : MonoBehaviour
 
     public void Cut()
     {
+        if(instrtut != null)
+        {
+            instrtut.tut_cut.SetActive(false);
+        }
+
         if (obj_knife.GetComponent<scr_knife>().cutting == false && obj_knife.GetComponent<scr_knife>().slicedcount < 5)
         {
             this.GetComponent<Animator>().Play("ani_cutting_cut");
@@ -29,6 +35,7 @@ public class scr_station_cut : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            
             Cut();
         }
     }
@@ -71,7 +78,14 @@ public class scr_station_cut : MonoBehaviour
         {
             //INGREDIENTS ALL CUT
             Debug.Log("DONE CUTTING");
-            instr.FinishStep(obj_knife.GetComponent<scr_knife>().cutpars);
+            if (instr != null)
+            {
+                instr.FinishStep(obj_knife.GetComponent<scr_knife>().cutpars);
+            }
+            else{
+                instrtut.FinishStep(obj_knife.GetComponent<scr_knife>().cutpars);
+            }
+            
             obj_knife.GetComponent<scr_knife>().cutpars.Clear();
             this.GetComponent<scr_station_cut>().enabled = false;
             obj_knife.GetComponent<scr_knife>().enabled = false;

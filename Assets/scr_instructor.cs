@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
 
 public class scr_instructor : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class scr_instructor : MonoBehaviour
     [SerializeField] GameObject stationcutsalt;
     [SerializeField] GameObject stationplate;
     [SerializeField] GameObject stationserve;
+    [SerializeField] GameObject stationclosing;
 
     [Header("Station References")]
     [SerializeField] GameObject cook;
@@ -22,6 +24,7 @@ public class scr_instructor : MonoBehaviour
     [SerializeField] GameObject cut;
     [SerializeField] GameObject plate;
     [SerializeField] GameObject serve;
+    [SerializeField] GameObject closing;
 
 
     [Header("Cutting Object References")]
@@ -42,6 +45,22 @@ public class scr_instructor : MonoBehaviour
     public float rotationSpeed = 5f; // Speed at which the camera rotates towards the target
     private int crntstep = 0;
     public int crntdish = 0;
+
+    public void StationClosing()
+    {
+        cook.GetComponent<scr_cook>().enabled = false;
+        mix.GetComponent<scr_mixer>().enabled = false;
+        cut.GetComponent<scr_station_cut>().enabled = false;
+        plate.GetComponent<scr_station_plate>().enabled = false;
+        serve.GetComponent<scr_station_serve>().enabled = false;
+        GameObject.Find("obj_controller").GetComponent<scr_controller>().crnt_dialog_index = 999;
+        GameObject.Find("obj_controller").GetComponent<scr_controller>().FinishedDialog();
+        GameObject.Find("obj_controller").GetComponent<scr_controller>().enabled = false;
+
+        targetObject = stationclosing;
+
+        closing.GetComponent<scr_station_closing>().StartScrape();
+    }
 
     private void Start()
     {
@@ -84,7 +103,7 @@ public class scr_instructor : MonoBehaviour
         }
         else
         {
-            StationServe();
+            SceneManager.LoadScene("scn_preplay");
             Debug.Log("NO more dishes in line");
         }
         
@@ -190,6 +209,7 @@ public class scr_instructor : MonoBehaviour
 
         PlayWhoosh();
         targetObject = stationcut;
+        GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler>().ChangePhase(1);
     }
 
     private void StationMix(List<GameObject> cutted, int goal)
@@ -198,10 +218,12 @@ public class scr_instructor : MonoBehaviour
         mix.GetComponent<scr_mixer>().Reinit(goal,cutted);
         PlayWhoosh();
         targetObject = stationmix;
+        GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler>().ChangePhase(3);
     }
 
     private void StationCook(List<GameObject> cutted, int target, int length, bool pot)
     {
+        GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler>().ChangePhase(4);
         cook.GetComponent<scr_cook>().enabled = true;
         cook.GetComponent<scr_cook>().ReInit(cutted);
         cook.GetComponent<scr_cook>().targettime = length;
@@ -213,6 +235,7 @@ public class scr_instructor : MonoBehaviour
 
     private void StationPlate(int dish)
     {
+        GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler>().ChangePhase(4);
         plate.GetComponent<scr_station_plate>().ReInit(dish);
         PlayWhoosh();
         targetObject = stationplate;

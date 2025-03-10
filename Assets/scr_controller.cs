@@ -21,11 +21,14 @@ public class scr_controller : MonoBehaviour
     public TMP_Text obj_textfield_dialog;
     public TMP_Text obj_textfield_dishlist;
 
+    public TMP_Text ingramt;
+
+
     public Animator txttitle;
 
     private string fullText; // Original text with rich tags
     private string displayedText; // Text currently being displayed
-    private int crnt_dialog_index = 0;
+    public int crnt_dialog_index = 0;
 
     private bool isTalking = false;
     public int crnt_customer;
@@ -78,6 +81,18 @@ public class scr_controller : MonoBehaviour
 
         GetCust();
         /*obj_textfield_dialog.gameObject.GetComponent<TMPWriter>().OnFinishWriter.AddListener(HandleWriterFinished);*/
+        UpdateIngrList();
+        
+    }
+
+    public void UpdateIngrList()
+    {
+        ingramt.text = "";
+        foreach(int i in GameObject.Find("obj_var").GetComponent<scr_var>().amountingr)
+        {
+            ingramt.text += i<=0 ? "<color=red>" : "<color=green>" + "x" + i + "\n";
+        }
+        
     }
 
     public void GetCust()
@@ -128,16 +143,66 @@ public class scr_controller : MonoBehaviour
                 break;
         }
 
+        int[] crnt_ingr = (int[])GameObject.Find("obj_var").GetComponent<scr_var>().amountingr.Clone();
+
+
         int howmanydishes = Random.Range(x[0], x[1]+1);
         int[] generateddishes = new int[howmanydishes];
 
 
         for (int i = 0; i < howmanydishes; i++)
         {
-            //Amount of Dish Types Here => (count +1)
-            /*            generateddishes[i] = Random.Range(1, typesofdishes+1);
-            */
-            generateddishes[i] = Random.Range(1, typesofdishes+1);
+            
+            int gen = Random.Range(1, typesofdishes + 1);
+            //0 carot
+            //1 tomato
+            //2 onion
+            //3 eggplat
+            //4 potato
+            //5 meat
+            //6 butter
+
+            //1 fr - carrot meat
+            //2 soup - onion, carrot, tomato, potato
+            //3 steak - meat butter
+
+            int[] required = new int[0];
+            bool possible = true;
+
+            switch (gen)
+            {
+                case 1:
+                    required = new int[] { 0, 5 };
+                    break;
+                case 2:
+                    required = new int[] { 2, 0, 1, 4 };
+                    break;
+                case 3:
+                    required = new int[] { 5, 6 };
+                    break;
+                default:
+                    required = new int[] { 0};
+                    break;
+            }
+
+            foreach(int k in required)
+            {
+                if(crnt_ingr[k] <= 0)
+                {
+                    possible = false;
+                }
+            }
+
+            if (possible)
+            {
+                foreach (int k in required)
+                {
+                    crnt_ingr[k] -= 1;
+                }
+
+                generateddishes[i] = gen;
+            }
+
         }
 
         //Amount of Dish Types Here TOO
@@ -147,7 +212,7 @@ public class scr_controller : MonoBehaviour
             if (count >= 1) dishlist.Add(i+"_" + count);
         }
 
-
+        GameObject.Find("obj_var").GetComponent<scr_var>().amountingr = (int[])crnt_ingr.Clone();
 
     }
 
@@ -157,6 +222,7 @@ public class scr_controller : MonoBehaviour
         {
             isTalking = false;
             par_dialog.transform.GetChild(1).gameObject.SetActive(true);
+            UpdateIngrList();
         }
 
     }
@@ -173,18 +239,23 @@ public class scr_controller : MonoBehaviour
             }
             else if (crnt_dialog_index >= Customer_Prideful.Length)
             {
-                //Finished Dialog
-                par_dialog.GetComponent<Animator>().Play("ani_dialogue_hidden");
-                obj_textfield_dialog.text = "";
-                isTalking = false;
-                par_dialog.transform.GetChild(1).gameObject.SetActive(false);
-                /*par_dishlist.SetActive(true);*/
-                Started = true;
-                ui_button.SetActive(false);
+                FinishedDialog();
                 StartCoroutine(StartCook());
-
             }
         }
+    }
+
+    public void FinishedDialog()
+    {
+        //Finished Dialog
+        par_dialog.GetComponent<Animator>().Play("ani_dialogue_hidden");
+        obj_textfield_dialog.text = "";
+        isTalking = false;
+        par_dialog.transform.GetChild(1).gameObject.SetActive(false);
+        /*par_dishlist.SetActive(true);*/
+        Started = true;
+        ui_button.SetActive(false);
+        
     }
 
     public IEnumerator StartCook()
@@ -250,6 +321,7 @@ public class scr_controller : MonoBehaviour
             if(y.ToString() == "$")
             {
                 constrstring += GetDishList(false);
+                UpdateIngrList();
             }
             else
             {

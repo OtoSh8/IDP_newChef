@@ -8,11 +8,13 @@ public class scr_serialhandler : MonoBehaviour
 
     private int current;
 
-    public static string knifeport = "COM16"; // Change COM port if necessary
+    public static string knifeport = "COM4"; // Change COM port if necessary
     private SerialPort sp;
     private Thread IOThread;
     private bool threadRunning = false;
     private string incoming = "";
+
+    public int phase = 0;
 
     private void Start()
     {
@@ -52,37 +54,108 @@ public class scr_serialhandler : MonoBehaviour
         }
     }
 
+    public void ChangePhase(int x)
+    {
+        phase = x;
+        sp.Write(x.ToString());
+        Debug.Log("Change Phase: " + phase);
+    }
+
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Equals))
+        {
+            ChangePhase(phase + 1);
+
+        }
+
         lock (this)
         {
             if (!string.IsNullOrEmpty(incoming))
-            {
-                Debug.Log("Received: " + incoming);
-                if(System.Convert.ToInt16(incoming) > current)
+        {
+            Debug.Log("Received: " + incoming);
+
+                switch (phase)
                 {
-                    current = System.Convert.ToInt16(incoming);
-                    
-                    if(SceneManager.GetActiveScene().name == "scn_start")
-                    {
-                        GameObject.Find("obj_start").GetComponent<scr_start>().StartGame();
-                    }
-                    else if (SceneManager.GetActiveScene().name == "scn_preplay")
-                    {
-                        GameObject.Find("obj_selector").GetComponent<scr_sel>().StartGame();
-                    }
-                    else if (SceneManager.GetActiveScene().name == "scn_play")
-                    {
+                    case 0:
+                        if (SceneManager.GetActiveScene().name == "scn_preplay")
+                        {
+                            GameObject.Find("obj_selector").GetComponent<scr_sel>().AddIngr();
+                        }
+                        break;
+                    case 1:
                         GameObject.Find("station_cut").GetComponent<scr_station_cut>().Cut();
-                    }
-                                
-
+                        break;
+                    case 2:
+                        GameObject.Find("par_salt").GetComponent<scr_salt>().DoShaker();
+                        break;
+                    case 3:
+                        GameObject.Find("par_mixer").GetComponent<scr_mixer>().DoMix();
+                        break;
+                    case 4:
+                        break;
                 }
+                
 
-                incoming = ""; // Clear after reading
+                incoming = "";
             }
         }
-    }
+
+            /*lock (this)
+            {
+                if (!string.IsNullOrEmpty(incoming))
+                {
+                    Debug.Log("Received: " + incoming);
+
+    *//*                if(System.Convert.ToInt16(incoming) > current)
+                    {
+                        current = System.Convert.ToInt16(incoming);
+                        *//*
+                        if(SceneManager.GetActiveScene().name == "scn_start")
+                        {
+                            GameObject.Find("obj_start").GetComponent<scr_start>().StartGame();
+                        }
+                        else if (SceneManager.GetActiveScene().name == "scn_preplay")
+                        {
+                            GameObject.Find("obj_selector").GetComponent<scr_sel>().StartGame();
+                        }
+                        else if (SceneManager.GetActiveScene().name == "scn_play")
+                        {
+                            GameObject.Find("station_cut").GetComponent<scr_station_cut>().Cut();
+                        }
+                        else if (SceneManager.GetActiveScene().name == "scn_tutorial")
+                        {
+                            switch (phase)
+                            {
+                                //cut
+                                //salt
+                                //mix
+                                case 0:
+                                    if (Input.GetKeyDown(KeyCode.Q))
+                                    {
+                                        sp.Write("0");
+                                    }
+                                    break;
+                                case 1:
+                                    GameObject.Find("station_cut").GetComponent<scr_station_cut>().Cut();
+                                    break;
+                                case 2:
+                                    GameObject.Find("par_salt").GetComponent<scr_salt>().DoShaker();
+                                    break;
+                                case 3:
+                                    GameObject.Find("par_mixer").GetComponent<scr_mixer>().DoMix();
+                                    break;
+                            }
+                            GameObject.Find("station_cut").GetComponent<scr_station_cut>().Cut();
+                        }
+
+
+                    *//*}*//*
+
+                    incoming = ""; // Clear after reading
+                }
+            }*/
+        }
 
     private void OnDestroy()
     {

@@ -18,11 +18,11 @@ public class scr_sel : MonoBehaviour
     [SerializeField] TextMeshProUGUI txt_totalspent;
 
     //carrot, tomato, onion, eggplant, potato, meat
-
+    string[] names = { "Carrot", "Tomato", "Onion", "Eggplant", "Potato", "Meat", "Butter", "" };
     int[] prices = { 10, 10, 10, 0, 0, 20, 0, 0 };
-    int[] amountingr = { 2, 1, 1, 0, 1, 1, 0, 0 };
+    int[] amountingr = { 20, 20, 20, 20, 20, 20, 20, 20 };
 
-    int[] amountmax =    { 20, 10, 10, 1, 10, 10, 0, 0 };
+    int[] amountmax =    { 20, 20, 20, 20, 20, 20, 20, 20 };
     int[] amountorange = { 12, 8, 7, 0, 7, 6, 0, 0 };
     int[] amountavg =    { 6, 4, 4, 0, 4, 4, 0, 0 };
     int[] amountmin =    { 2, 1, 1, 0, 1, 1, 0, 0 };
@@ -51,9 +51,37 @@ public class scr_sel : MonoBehaviour
             SelectContainer();
         }
 
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            AddIngr();
+        }
+
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             StartGame();
+        }
+    }
+
+    public void AddIngr()
+    {
+        int hoe = 0;
+        for (int i = 0; i < prices.Length; i++)
+        {
+            hoe += prices[i] * amountingr[i];
+        }
+
+        if (GameObject.Find("obj_var").GetComponent<scr_var>().money - hoe >= prices[sel])
+        {
+            amountingr[sel]++;
+            if (amountingr[sel] > amountmax[sel])
+            {
+                amountingr[sel] = amountmin[sel];
+            }
+            SelectContainer();
+        }
+        else
+        {
+            amountingr[sel] = amountmin[sel];
         }
     }
 
@@ -61,7 +89,10 @@ public class scr_sel : MonoBehaviour
     {
         for(int x = 0; x < par_cons.childCount; x++)
         {
-            if(x == sel)
+            par_cons.GetChild(x).GetChild(2).GetComponent<TextMeshProUGUI>().text = names[x] + " " + prices[x] + "$";
+            par_cons.GetChild(x).GetChild(3).GetComponent<TextMeshProUGUI>().text = "x" + amountingr[x];
+
+            if (x == sel)
             {
                 par_cons.GetChild(x).GetChild(0).gameObject.SetActive(true);
 
@@ -71,7 +102,7 @@ public class scr_sel : MonoBehaviour
                 }
                 
 
-                if (par_cons.GetChild(x).childCount == 2)
+                if (par_cons.GetChild(x).childCount >= 2)
                 {
                     par_cons.GetChild(x).GetChild(1).GetComponent<Animator>().Play("ani_rotate");
                 }
@@ -84,7 +115,7 @@ public class scr_sel : MonoBehaviour
                     par_icons.GetChild(x).gameObject.SetActive(false);
                 }
 
-                if (par_cons.GetChild(x).childCount == 2)
+                if (par_cons.GetChild(x).childCount >= 2)
                 {
                     par_cons.GetChild(x).GetChild(1).GetComponent<Animator>().Play("ani_idle");
                 }
@@ -121,6 +152,10 @@ public class scr_sel : MonoBehaviour
                 txt_title.text = "Meat <color=green> $20";
                 desc.text = "Who know's where this piece of meat came from.";
                 break;
+            case 6:
+                txt_title.text = "butter <color=green> $20";
+                desc.text = "Slippery bar of goodness.";
+                break;
             default:
                 txt_title.text = "";
                 desc.text = "";
@@ -149,6 +184,18 @@ public class scr_sel : MonoBehaviour
 
         GameObject.Find("obj_var").GetComponent<scr_var>().time = 25200;
         GameObject.Find("obj_var").GetComponent<scr_var>().isTime = true;
+        GameObject.Find("obj_var").GetComponent<scr_var>().amountingr = (int[])amountingr.Clone();
+
+        int ho = 0;
+        for (int i = 0; i < prices.Length; i++)
+        {
+            ho += prices[i] * amountingr[i];
+        }
+        GameObject.Find("obj_var").GetComponent<scr_var>().totalspent = ho;
+
+
+        GameObject.Find("obj_var").GetComponent<scr_var>().MinusMoney(ho);
+
         SceneManager.LoadScene("scn_play");
 
     }

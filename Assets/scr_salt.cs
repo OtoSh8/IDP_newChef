@@ -39,6 +39,30 @@ public class scr_salt : MonoBehaviour
         }
     }
 
+    public void DoShaker()
+    {
+        if (GameObject.Find("obj_instructor").GetComponent<scr_instructor_tutorial>() != null)
+        {
+            GameObject.Find("obj_instructor").GetComponent<scr_instructor_tutorial>().tut_salt.SetActive(true);
+        }
+
+
+        if (salt_active && up == false)
+        {
+            /*animator.Play("ani_salt_up",-1,0f);*/
+            up = true;
+            animator.SetBool("up", up);
+
+        }
+        else if (salt_active && up == true)
+        {
+            /*animator.Play("ani_salt_down", -1, 0f);*/
+            up = false;
+            animator.SetBool("up", up);
+            CreateSalt();
+        }
+    }
+
     public void UpdateShakerUp()
     {
         /*up = true;*/

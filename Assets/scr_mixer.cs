@@ -22,6 +22,7 @@ public class scr_mixer : MonoBehaviour
     public int goal = 0;
 
     [SerializeField] scr_instructor instr;
+    [SerializeField] scr_instructor_tutorial instrtut;
 
     List<GameObject> ingr = new List<GameObject> ();
     public void Reinit(int x, List<GameObject> cutted)
@@ -59,11 +60,9 @@ public class scr_mixer : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isMoving == false)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            isMoving = true;
-            amt++;
-            StartCoroutine(GetSignal());
+            DoMix();
         }
 
         if (isMoving)
@@ -73,6 +72,21 @@ public class scr_mixer : MonoBehaviour
          
 
         objmixer.transform.position = new Vector3(Mathf.Sin(timecounter)* Width, 0f , Mathf.Cos(timecounter)*Length) + startingpos;
+    }
+
+    public void DoMix()
+    {
+
+        if (isMoving == false)
+        {
+            if(instrtut != null)
+            {
+                instrtut.tut_mix.SetActive (false);
+            }
+            isMoving = true;
+            amt++;
+            StartCoroutine(GetSignal());
+        }
     }
 
     IEnumerator GetSignal()
@@ -95,7 +109,14 @@ public class scr_mixer : MonoBehaviour
     public void Finished()
     {
         ui_mix.SetActive(false);
-        instr.FinishStep(ingr);
+        if(instr != null)
+        {
+            instr.FinishStep(ingr);
+        }
+        else
+        {
+            instrtut.FinishStep(ingr);
+        }
         this.GetComponent<scr_mixer>().enabled = false;
     }
 }

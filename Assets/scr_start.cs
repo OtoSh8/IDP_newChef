@@ -13,7 +13,6 @@ public class scr_start : MonoBehaviour
 
     public void StartGame()
     {
-        Debug.Log("SD");
-        SceneManager.LoadScene("scn_preplay");
+        SceneManager.LoadScene("scn_tutorial");
     }
 }

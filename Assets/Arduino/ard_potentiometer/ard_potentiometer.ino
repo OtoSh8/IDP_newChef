@@ -7,6 +7,7 @@ int average = 0;            // the average
 int crntamt = 0;
 int inputPin = A1;
 
+
 void setup() {
   Serial.begin(9600);
   for (int thisReading = 0; thisReading < numReadings; thisReading++) {

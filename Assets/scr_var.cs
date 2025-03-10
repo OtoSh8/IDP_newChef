@@ -5,6 +5,8 @@ using UnityEngine;
 public class scr_var : MonoBehaviour
 {
     public int money = 0;
+    public int totalspent = 0;
+
     public float time = 21600;
     public float timemultiplier;
 
@@ -50,8 +52,10 @@ public class scr_var : MonoBehaviour
         {
             phase = "Service Ongoing";
         }
-        else
+        else if(isTime)
         {
+            GameObject.Find("obj_instructor").GetComponent<scr_instructor>().GetComponent<scr_instructor>().StationClosing();
+            isTime = false;
             phase = "Closing Time";
         }
 
@@ -69,6 +73,14 @@ public class scr_var : MonoBehaviour
         moneytxt.gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "+ " + mon.ToString() + " $";
         moneytxt.gameObject.GetComponent<Animator>().Play("money_add");
         money += mon;
+    }
+
+    public void MinusMoney(int mon)
+    {
+
+        moneytxt.gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "- " + mon.ToString() + " $";
+        moneytxt.gameObject.GetComponent<Animator>().Play("money_minus");
+        money -= mon;
     }
 
     public void UpdateMoneyText()
