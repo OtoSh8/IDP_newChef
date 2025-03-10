@@ -8,6 +8,8 @@ void setup() {
 }
 
 void loop() {
+
+  
   if(digitalRead(12) == HIGH && down == false){
     down = true;
   }
