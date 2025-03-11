@@ -270,6 +270,7 @@ public class scr_cook : MonoBehaviour
                 // Adjust the value with arrow keys
                 if (Input.GetKey(KeyCode.RightArrow))
                 {
+                    instrtut.tut_mix.SetActive(false);
                     leftValue = Mathf.Min(leftValue + 1, 100); // Increase value, max 100
                 }
                 else if (Input.GetKey(KeyCode.LeftArrow))

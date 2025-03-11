@@ -56,9 +56,13 @@ public class scr_serialhandler : MonoBehaviour
 
     public void ChangePhase(int x)
     {
-        phase = x;
-        sp.Write(x.ToString());
-        Debug.Log("Change Phase: " + phase);
+        if (sp.IsOpen)
+        {
+            phase = x;
+            sp.Write(x.ToString());
+            Debug.Log("Change Phase: " + phase);
+        }
+
     }
 
     private void Update()

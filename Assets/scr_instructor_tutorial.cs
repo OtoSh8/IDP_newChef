@@ -40,7 +40,10 @@ public class scr_instructor_tutorial : MonoBehaviour
     [SerializeField] public GameObject tut_cut;
     [SerializeField] public GameObject tut_salt;
     [SerializeField] public GameObject tut_mix;
-
+    [SerializeField] public GameObject tut_cook;
+    [SerializeField] public GameObject tut_cook2;
+    [SerializeField] public GameObject tut_plate;
+    [SerializeField] public GameObject tut_serve;
 
     [Header("Others")]
     [SerializeField] Animator txttitle;
@@ -225,6 +228,7 @@ public class scr_instructor_tutorial : MonoBehaviour
         PlayWhoosh();
         targetObject = stationmix;
         GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler>().ChangePhase(3);
+        tut_mix.SetActive(true);
     }
 
     private void StationCook(List<GameObject> cutted, int target, int length, bool pot)
@@ -237,6 +241,8 @@ public class scr_instructor_tutorial : MonoBehaviour
         cook.GetComponent<scr_cook>().pot(pot);
         PlayWhoosh();
         targetObject = stationcook;
+        tut_cook.SetActive(true);
+
     }
 
     private void StationPlate(int dish)
@@ -245,6 +251,8 @@ public class scr_instructor_tutorial : MonoBehaviour
         plate.GetComponent<scr_station_plate>().ReInit(dish);
         PlayWhoosh();
         targetObject = stationplate;
+        tut_plate.SetActive(true);
+
     }
 
     private void StationServe()
@@ -252,6 +260,7 @@ public class scr_instructor_tutorial : MonoBehaviour
         GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler>().ChangePhase(4);
         serve.GetComponent<scr_station_serve>().readytoserve = true;
         targetObject = stationserve;
+        tut_serve.SetActive(true);
 
     }
 }

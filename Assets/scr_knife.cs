@@ -61,7 +61,11 @@ public class scr_knife : MonoBehaviour
 
     public void StartSalting()
     {
-        GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler>().ChangePhase(2);
+        if (GameObject.Find("obj_arduino_handler") != null)
+        {
+            GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler>().ChangePhase(2);
+        }
+
 
         parsalt.SetActive(true);
         parsalt.GetComponent<scr_salt>().amt = 0;
@@ -74,6 +78,7 @@ public class scr_knife : MonoBehaviour
         else
         {
             GameObject.Find("obj_instructor").GetComponent<scr_instructor_tutorial>().targetObject = campos;
+            GameObject.Find("obj_instructor").GetComponent<scr_instructor_tutorial>().tut_salt.SetActive(true);
         }
         
 

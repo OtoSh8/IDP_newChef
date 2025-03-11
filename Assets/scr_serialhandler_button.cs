@@ -2,6 +2,7 @@ using UnityEngine;
 using System.IO.Ports;
 using System.Threading;
 using UnityEngine.SceneManagement;
+using System;
 
 public class scr_serialhandler_button : MonoBehaviour
 {
@@ -60,37 +61,49 @@ public class scr_serialhandler_button : MonoBehaviour
             if (!string.IsNullOrEmpty(incoming))
             {
                 Debug.Log("Received: " + incoming);
-
-                //Button Pushed
-                switch (phase)
+                if(incoming[0] == '_')
                 {
-                    case 0:
-                        //Rest Phase / Do Nothing
-                        break;
-                    case 1:
-                        //Start Button
-                        if(SceneManager.GetActiveScene().name == "scn_start")
-                        {
-                            GameObject.Find("obj_start").GetComponent<scr_start>().StartGame();
-                        }
-                        break;
-                    case 2:
-                        //Select Button
-                        if (SceneManager.GetActiveScene().name == "scn_preplay")
-                        {
-                            GameObject.Find("obj_selector").GetComponent<scr_sel>();
-                        }
-                        break;
-                    case 3:
-                        //Chat Button
-                        break;
-                    case 4:
-                        //Plate
-                        break;
-                    case 5:
-                        //Serve
-                        break;
+                    if (SceneManager.GetActiveScene().name == "scn_tutorial")
+                    {
+                        GameObject.Find("obj_instructor").GetComponent<scr_instructor_tutorial>().tut_cook.SetActive(false);
+                        GameObject.Find("obj_instructor").GetComponent<scr_instructor_tutorial>().tut_cook2.SetActive(false);
+                    }
+                        GameObject.Find("station_cook").GetComponent<scr_cook>().UpdateVal(100 - Convert.ToInt32(incoming.TrimStart('_')));
                 }
+                else
+                {
+                    //Button Pushed
+                    switch (phase)
+                    {
+                        case 0:
+                            //Rest Phase / Do Nothing
+                            break;
+                        case 1:
+                            //Start Button
+                            if (SceneManager.GetActiveScene().name == "scn_start")
+                            {
+                                GameObject.Find("obj_start").GetComponent<scr_start>().StartGame();
+                            }
+                            break;
+                        case 2:
+                            //Select Button
+                            if (SceneManager.GetActiveScene().name == "scn_preplay")
+                            {
+                                GameObject.Find("obj_selector").GetComponent<scr_sel>();
+                            }
+                            break;
+                        case 3:
+                            //Chat Button
+                            break;
+                        case 4:
+                            //Plate
+                            break;
+                        case 5:
+                            //Serve
+                            break;
+                    }
+                }
+                
                 incoming = ""; // Clear after reading
             }
         }

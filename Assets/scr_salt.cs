@@ -23,8 +23,13 @@ public class scr_salt : MonoBehaviour
     }
     void Update()
     {
+
         if(salt_active && Input.GetKeyDown(KeyCode.UpArrow) && up == false)
         {
+            if (GameObject.Find("obj_instructor").GetComponent<scr_instructor_tutorial>() != null)
+            {
+                GameObject.Find("obj_instructor").GetComponent<scr_instructor_tutorial>().tut_salt.SetActive(false);
+            }
             /*animator.Play("ani_salt_up",-1,0f);*/
             up = true;
             animator.SetBool("up", up);
@@ -43,7 +48,7 @@ public class scr_salt : MonoBehaviour
     {
         if (GameObject.Find("obj_instructor").GetComponent<scr_instructor_tutorial>() != null)
         {
-            GameObject.Find("obj_instructor").GetComponent<scr_instructor_tutorial>().tut_salt.SetActive(true);
+            GameObject.Find("obj_instructor").GetComponent<scr_instructor_tutorial>().tut_salt.SetActive(false);
         }
 
 
