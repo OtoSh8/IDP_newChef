@@ -9,13 +9,13 @@ public class scr_serialhandler_button : MonoBehaviour
 
     private int current;
 
-    public static string btnport = "COM16"; // Change COM port if necessary
+    public static string btnport = "COM7"; // Change COM port if necessary
     private SerialPort sp;
     private Thread IOThread;
     private bool threadRunning = false;
     private string incoming = "";
 
-    public int phase = 0;
+    public int phase = 1;
     private void Start()
     {
         DontDestroyOnLoad(this);
@@ -68,8 +68,11 @@ public class scr_serialhandler_button : MonoBehaviour
                         GameObject.Find("obj_instructor").GetComponent<scr_instructor_tutorial>().tut_cook.SetActive(false);
                         GameObject.Find("obj_instructor").GetComponent<scr_instructor_tutorial>().tut_cook2.SetActive(false);
                     }
+                    if (SceneManager.GetActiveScene().name == "scn_tutorial" || SceneManager.GetActiveScene().name == "scn_play")
+                    {
                         GameObject.Find("station_cook").GetComponent<scr_cook>().UpdateVal(100 - Convert.ToInt32(incoming.TrimStart('_')));
-                }
+                    }
+                    }
                 else
                 {
                     //Button Pushed
@@ -89,14 +92,30 @@ public class scr_serialhandler_button : MonoBehaviour
                             //Select Button
                             if (SceneManager.GetActiveScene().name == "scn_preplay")
                             {
-                                GameObject.Find("obj_selector").GetComponent<scr_sel>();
+                                if(GameObject.Find("tut") != null && GameObject.Find("tut").activeSelf)
+                                {
+                                    GameObject.Find("tut").SetActive(false);
+                                }
+                                GameObject.Find("obj_selector").GetComponent<scr_sel>().OnButtonHit();
                             }
                             break;
                         case 3:
                             //Chat Button
+                            if (SceneManager.GetActiveScene().name == "scn_play")
+                            {
+                                GameObject.Find("obj_controller").GetComponent<scr_controller>().OnButtonHit();
+                            }
+                            else if (SceneManager.GetActiveScene().name == "scn_tutorial")
+                            {
+                                GameObject.Find("obj_controller").GetComponent<scr_tutorial_controller>().OnButtonHit();
+                            }
                             break;
                         case 4:
                             //Plate
+                            if (SceneManager.GetActiveScene().name == "scn_play" || SceneManager.GetActiveScene().name == "scn_tutorial")
+                            {
+                                GameObject.Find("station_plate").GetComponent<scr_station_plate>().OnButtonHit();
+                            }
                             break;
                         case 5:
                             //Serve

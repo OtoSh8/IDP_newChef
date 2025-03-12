@@ -245,8 +245,31 @@ public class scr_controller : MonoBehaviour
         }
     }
 
+    public void OnButtonHit()
+    {
+        if (isTalking == false && Started == false)
+        {
+            if (crnt_dialog_index < Customer_Prideful.Length)
+            {
+                Customer_Speak(crnt_dialog_index);
+                par_dialog.transform.GetChild(1).gameObject.SetActive(false);
+                isTalking = true;
+            }
+            else if (crnt_dialog_index >= Customer_Prideful.Length)
+            {
+                FinishedDialog();
+                StartCoroutine(StartCook());
+            }
+        }
+    }
+
     public void FinishedDialog()
     {
+        if (GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler_button>() != null)
+        {
+            GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler_button>().phase = 0;
+        }
+
         //Finished Dialog
         par_dialog.GetComponent<Animator>().Play("ani_dialogue_hidden");
         obj_textfield_dialog.text = "";
@@ -304,6 +327,10 @@ public class scr_controller : MonoBehaviour
 
     private void Customer_Speak(int x)
     {
+        if(GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler_button>() != null)
+        {
+            GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler_button>().phase = 3;
+        }
         string getnextdialog = "";
         switch (crnt_customer)
         {

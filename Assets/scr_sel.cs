@@ -62,6 +62,15 @@ public class scr_sel : MonoBehaviour
         }
     }
 
+    public void OnButtonHit()
+    {
+        sel++;
+        if (sel > 7)
+        {
+            sel = 0;
+        }
+        SelectContainer();
+    }
     public void AddIngr()
     {
         int hoe = 0;

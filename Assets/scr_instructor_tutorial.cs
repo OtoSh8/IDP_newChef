@@ -43,6 +43,7 @@ public class scr_instructor_tutorial : MonoBehaviour
     [SerializeField] public GameObject tut_cook;
     [SerializeField] public GameObject tut_cook2;
     [SerializeField] public GameObject tut_plate;
+    [SerializeField] public GameObject tut_plate2;
     [SerializeField] public GameObject tut_serve;
 
     [Header("Others")]
@@ -149,8 +150,8 @@ public class scr_instructor_tutorial : MonoBehaviour
                 switch (step)
                 {
                     case 0:
-                        List<GameObject> list = new List<GameObject>(new GameObject[] { onion, carrot, tomato, potato });
-                        List<bool> list2 = new List<bool>(new bool[] { false, false, true, false });
+                        List<GameObject> list = new List<GameObject>(new GameObject[] { tomato});
+                        List<bool> list2 = new List<bool>(new bool[] { true});
                         StationCut(list, list2);
                         break;
                     case 1:
@@ -163,9 +164,10 @@ public class scr_instructor_tutorial : MonoBehaviour
                         StationPlate(dish);
                         break;
                     case 4:
-                        Debug.Log("DISH IS DONE");
-                        serve.GetComponent<scr_station_serve>().AddDish(dish);
-                        StartCook();
+                        //Final Tutorial
+                        targetObject = npcdialog;
+                        controller.tutorialFinished = true;
+                        controller.FinalDialog();
                         break;
                 }
                 break;
@@ -247,7 +249,13 @@ public class scr_instructor_tutorial : MonoBehaviour
 
     private void StationPlate(int dish)
     {
+        if (GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler_button>() != null)
+        {
+            GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler_button>().phase = 4;
+
+        }
         GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler>().ChangePhase(4);
+
         plate.GetComponent<scr_station_plate>().ReInit(dish);
         PlayWhoosh();
         targetObject = stationplate;
@@ -257,6 +265,11 @@ public class scr_instructor_tutorial : MonoBehaviour
 
     private void StationServe()
     {
+        if (GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler_button>() != null)
+        {
+            GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler_button>().phase = 5;
+
+        }
         GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler>().ChangePhase(4);
         serve.GetComponent<scr_station_serve>().readytoserve = true;
         targetObject = stationserve;

@@ -8,7 +8,7 @@ public class scr_serialhandler : MonoBehaviour
 
     private int current;
 
-    public static string knifeport = "COM4"; // Change COM port if necessary
+    public static string knifeport = "COM16"; // Change COM port if necessary
     private SerialPort sp;
     private Thread IOThread;
     private bool threadRunning = false;

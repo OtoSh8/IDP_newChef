@@ -246,6 +246,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -260937997811264843, guid: 109dd984c763ad34d96f023b1f054fe8, type: 3}
+      propertyPath: phase
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1131651692807927819, guid: 109dd984c763ad34d96f023b1f054fe8, type: 3}
       propertyPath: m_Name
       value: obj_arduino_handler

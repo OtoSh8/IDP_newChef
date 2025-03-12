@@ -115,6 +115,7 @@ public class scr_cook : MonoBehaviour
             }
             else
             {
+                instrtut.tut_cook2.SetActive(true);
                 switch (instrtut.crntdish)
                 {
                     case 1:
@@ -270,11 +271,18 @@ public class scr_cook : MonoBehaviour
                 // Adjust the value with arrow keys
                 if (Input.GetKey(KeyCode.RightArrow))
                 {
-                    instrtut.tut_mix.SetActive(false);
+                    if(instrtut != null)
+                    {
+                        instrtut.tut_cook.SetActive(false);
+                    }
                     leftValue = Mathf.Min(leftValue + 1, 100); // Increase value, max 100
                 }
                 else if (Input.GetKey(KeyCode.LeftArrow))
                 {
+                    if (instrtut != null)
+                    {
+                        instrtut.tut_cook2.SetActive(false);
+                    }
                     leftValue = Mathf.Max(leftValue - 1, 0); // Decrease value, min 0
                 }
                 

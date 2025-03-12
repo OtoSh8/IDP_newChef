@@ -5,6 +5,7 @@ using TMPEffects.Components;
 using UnityEngine.Events;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class scr_tutorial_controller : MonoBehaviour
 {
@@ -36,14 +37,15 @@ public class scr_tutorial_controller : MonoBehaviour
     private bool Started = false;
 
     [Header("Personality Preferences")]
-    public int personalities = 1;
-    private string[] tutorial = { "Welcome to the tutorial! Here we will teach you the basics of becoming an <b>All Rounded Chef!</b>", "Anyways,<!wait=0.2> I'm feeling <!delay=0.2><+shake> very hungry <!delay=0.02> </+shake> so I'll have $<!wait=1>", "I'm looking forward to enjoying a <wave><!delay=0.1>hugeeeeee<!delay=0.02></wave> feastttt.<!wait=0.2> Hehe." };
+    private string[] tutorial = { "Welcome to the tutorial! Here we will teach you the basics of becoming an <b>All Rounded Chef!</b>", "You will be taught how to use your handy cooking knife to prepare food, as well as how to plate and serve your food.", "For today's training, just make me a simple tomato soup. Good Luck!" };
+    private string[] tutorialend = { "<funky>Good job</funky>,<!delay=0.02> you've finished the tutorial!", "Oh yeah, I almost forgot! ", "Don't forget to order the ingredients needed everyday, and don't order too much or you'll end up creating <+shake><color=red>food waste<color=black></+shake>!" };
+
 
 
 
     [Header("Other Preferences")]
     public float revealSpeed = 0.5f;
-
+    public bool tutorialFinished = false;
 
     [Header("Dish Preferences")]
     //FOOD TYPES
@@ -125,9 +127,40 @@ public class scr_tutorial_controller : MonoBehaviour
             }
         }
     }
-
+    public void OnButtonHit()
+    {
+        if (isTalking == false && Started == false)
+        {
+            if (crnt_dialog_index < tutorial.Length)
+            {
+                Customer_Speak(crnt_dialog_index);
+                par_dialog.transform.GetChild(1).gameObject.SetActive(false);
+                isTalking = true;
+            }
+            else if (crnt_dialog_index >= tutorial.Length)
+            {
+                FinishedDialog();
+                StartCoroutine(StartCook());
+            }
+        }
+    }
     public void FinishedDialog()
     {
+        if (GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler_button>() != null)
+        {
+            GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler_button>().phase = 3;
+
+        }
+        if (tutorialFinished)
+        {
+            if (GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler_button>() != null)
+            {
+                GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler_button>().phase = 2;
+
+            }
+            SceneManager.LoadScene("scn_preplay");
+        }
+
         //Finished Dialog
         par_dialog.GetComponent<Animator>().Play("ani_dialogue_hidden");
         obj_textfield_dialog.text = "";
@@ -146,13 +179,34 @@ public class scr_tutorial_controller : MonoBehaviour
         objinstr.StartCook();
     }
 
+    public void FinalDialog()
+    {
+        ReInit();
+        par_dialog.GetComponent<Animator>().Play("ani_dialogue_enter");
+        crnt_customer = 1;
+        Customer_Speak(0);
+        isTalking = true;
 
+    }
 
     private void Customer_Speak(int x)
     {
-        isTalking = true;
+        if (GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler_button>() != null)
+        {
+            GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler_button>().phase = 3;
+        }
+
         string getnextdialog = "";
-        getnextdialog = tutorial[x];
+        switch (crnt_customer)
+        {
+            case 0:
+                getnextdialog = tutorial[x];
+                break;
+            case 1:
+                getnextdialog = tutorialend[x];
+                break;
+        }
+
 
         string constrstring = "";
 

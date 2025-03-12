@@ -53,6 +53,48 @@ public class scr_station_plate : MonoBehaviour
         this.GetComponent<Animator>().Play("ani_plate_og");
         plateoutline.SetActive(true);
         ready = false;
+
+    }
+
+    public void OnButtonHit()
+    {
+        if (dishno != 0)
+        {
+            if (!platdown)
+            {
+                if (instrtut != null)
+                {
+                    instrtut.tut_plate.SetActive(false);
+                }
+
+                this.GetComponent<Animator>().Play("ani_plate_show");
+                platdown = true;
+                StartCoroutine(ShowTimebar());
+            }
+
+            else if (platdown && !hit && ready)
+            {
+                if (instrtut != null)
+                {
+                    instrtut.tut_plate2.SetActive(false);
+                }
+
+                if (crntno <= targno && crntno > targno - 10)
+                {
+                    //HIT IT BOI
+                    Debug.Log("HIT");
+                    hit = true;
+                    timebar.gameObject.transform.parent.gameObject.SetActive(false);
+                    pot.gameObject.SetActive(false);
+                    OnPour();
+                }
+                else
+                {
+                    crntno = 0;
+                }
+
+            }
+        }
     }
 
     public void Update()
@@ -61,7 +103,10 @@ public class scr_station_plate : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space) && platdown == false)
             {
-
+                if (instrtut != null)
+                {
+                    instrtut.tut_plate.SetActive(false);
+                }
                 this.GetComponent<Animator>().Play("ani_plate_show");
                 platdown = true;
                 StartCoroutine(ShowTimebar());
@@ -92,7 +137,11 @@ public class scr_station_plate : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Space) && ready)
                 {
-                    if(crntno <= targno && crntno > targno - 10)
+                    if (instrtut != null)
+                    {
+                        instrtut.tut_plate2.SetActive(false);
+                    }
+                    if (crntno <= targno && crntno > targno - 10)
                     {
                         //HIT IT BOI
                         Debug.Log("HIT");
@@ -115,7 +164,10 @@ public class scr_station_plate : MonoBehaviour
     {
         GameObject.Find("obj_audio").GetComponent<scr_audio>().PlaySoundID(3);
         plateoutline.SetActive(false);
-
+        if (instrtut != null)
+        {
+            instrtut.tut_plate2.SetActive(true);
+        }
     }
 
     public void PlayDrag()
