@@ -92,10 +92,7 @@ public class scr_serialhandler_button : MonoBehaviour
                             //Select Button
                             if (SceneManager.GetActiveScene().name == "scn_preplay")
                             {
-                                if(GameObject.Find("tut") != null && GameObject.Find("tut").activeSelf)
-                                {
-                                    GameObject.Find("tut").SetActive(false);
-                                }
+
                                 GameObject.Find("obj_selector").GetComponent<scr_sel>().OnButtonHit();
                             }
                             break;
@@ -119,6 +116,17 @@ public class scr_serialhandler_button : MonoBehaviour
                             break;
                         case 5:
                             //Serve
+                            if (SceneManager.GetActiveScene().name == "scn_play" || SceneManager.GetActiveScene().name == "scn_tutorial")
+                            {
+                                GameObject.Find("station_serve").GetComponent<scr_station_serve>().OnButtonHit();
+                            }
+                            break;
+                        case 6:
+                            //Scrape
+                            if (SceneManager.GetActiveScene().name == "scn_play" || SceneManager.GetActiveScene().name == "scn_tutorial")
+                            {
+                                GameObject.Find("station_closing").GetComponent<scr_station_closing>().OnButtonHit();
+                            }
                             break;
                     }
                 }

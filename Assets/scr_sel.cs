@@ -16,20 +16,20 @@ public class scr_sel : MonoBehaviour
     [SerializeField] Slider grnsliderval;
 
     [SerializeField] TextMeshProUGUI txt_totalspent;
-
+    
     //carrot, tomato, onion, eggplant, potato, meat
-    string[] names = { "Carrot", "Tomato", "Onion", "Eggplant", "Potato", "Meat", "Butter", "" };
-    int[] prices = { 10, 10, 10, 0, 0, 20, 0, 0 };
-    int[] amountingr = { 20, 20, 20, 20, 20, 20, 20, 20 };
+    string[] names = { "Carrot", "Tomato", "Onion", "Eggplant", "Potato", "Meat", "Butter"};
+    int[] prices = { 2, 3, 2, 4, 2, 10, 5};
+    int[] amountingr = { 10, 7, 7, 0, 5, 5, 5 };
 
-    int[] amountmax =    { 20, 20, 20, 20, 20, 20, 20, 20 };
-    int[] amountorange = { 12, 8, 7, 0, 7, 6, 0, 0 };
-    int[] amountavg =    { 6, 4, 4, 0, 4, 4, 0, 0 };
-    int[] amountmin =    { 2, 1, 1, 0, 1, 1, 0, 0 };
+    int[] amountmax =    { 30, 30, 30, 30, 30, 20, 20 };
+    int[] amountorange = { 25, 20, 20, 0, 20, 12, 12};
+    int[] amountavg =    { 15, 12, 12, 0, 10, 8, 8};
+    int[] amountmin =    { 7, 5, 5, 0, 3, 3, 3};
 
     private void Start()
     {
-        GameObject.Find("obj_var").transform.GetChild(0).gameObject.SetActive(true);
+
         SelectContainer();
     }
     private void Update()
@@ -44,11 +44,15 @@ public class scr_sel : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             sel++;
-            if(sel > 7)
+            if(sel > 6)
             {
                 sel = 0;
             }
             SelectContainer();
+            if (GameObject.Find("tut") != null && GameObject.Find("tut").activeSelf)
+            {
+                GameObject.Find("tut").SetActive(false);
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -65,11 +69,15 @@ public class scr_sel : MonoBehaviour
     public void OnButtonHit()
     {
         sel++;
-        if (sel > 7)
+        if (sel > 6)
         {
             sel = 0;
         }
         SelectContainer();
+        if (GameObject.Find("tut") != null && GameObject.Find("tut").activeSelf)
+        {
+            GameObject.Find("tut").SetActive(false);
+        }
     }
     public void AddIngr()
     {

@@ -48,6 +48,8 @@ public class scr_instructor : MonoBehaviour
 
     public void StationClosing()
     {
+        txttitle.Play("ani_title_appear1");
+
         cook.GetComponent<scr_cook>().enabled = false;
         mix.GetComponent<scr_mixer>().enabled = false;
         cut.GetComponent<scr_station_cut>().enabled = false;
@@ -103,7 +105,8 @@ public class scr_instructor : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene("scn_preplay");
+            /*SceneManager.LoadScene("scn_preplay");*/
+            StationServe();
             Debug.Log("NO more dishes in line");
         }
         

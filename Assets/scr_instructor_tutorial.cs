@@ -45,6 +45,7 @@ public class scr_instructor_tutorial : MonoBehaviour
     [SerializeField] public GameObject tut_plate;
     [SerializeField] public GameObject tut_plate2;
     [SerializeField] public GameObject tut_serve;
+    [SerializeField] public GameObject tut_closing;
 
     [Header("Others")]
     [SerializeField] Animator txttitle;
@@ -57,14 +58,17 @@ public class scr_instructor_tutorial : MonoBehaviour
 
     public void StationClosing()
     {
+        if (GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler_button>() != null)
+        {
+            GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler_button>().phase = 6;
+
+        }
+
         cook.GetComponent<scr_cook>().enabled = false;
         mix.GetComponent<scr_mixer>().enabled = false;
         cut.GetComponent<scr_station_cut>().enabled = false;
         plate.GetComponent<scr_station_plate>().enabled = false;
         serve.GetComponent<scr_station_serve>().enabled = false;
-        GameObject.Find("obj_controller").GetComponent<scr_controller>().crnt_dialog_index = 999;
-        GameObject.Find("obj_controller").GetComponent<scr_controller>().FinishedDialog();
-        GameObject.Find("obj_controller").GetComponent<scr_controller>().enabled = false;
 
         targetObject = stationclosing;
 
@@ -164,7 +168,19 @@ public class scr_instructor_tutorial : MonoBehaviour
                         StationPlate(dish);
                         break;
                     case 4:
+                        serve.GetComponent<scr_station_serve>().AddDish(2);
+                        StationServe();
                         //Final Tutorial
+                        /*targetObject = npcdialog;
+                        controller.tutorialFinished = true;
+                        controller.FinalDialog();*/
+                        break;
+                    case 5:
+                        tut_closing.SetActive(true);
+                        closing.GetComponent<scr_station_closing>().crnt.Add(2);
+                        StationClosing();
+                        break;
+                    case 6:
                         targetObject = npcdialog;
                         controller.tutorialFinished = true;
                         controller.FinalDialog();

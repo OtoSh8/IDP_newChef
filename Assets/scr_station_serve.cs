@@ -15,6 +15,9 @@ public class scr_station_serve : MonoBehaviour
 
     [SerializeField] scr_station_closing closing;
 
+    [SerializeField] scr_instructor_tutorial instrtut;
+
+
     List<int> dishes = new List<int>();
 
     public void ReInit()
@@ -29,6 +32,20 @@ public class scr_station_serve : MonoBehaviour
         dishes.Clear();
     }
 
+    public void OnButtonHit()
+    {
+        if (readytoserve)
+        {
+                if(instrtut != null)
+                {
+                instrtut.tut_serve.SetActive(false);
+                }
+                this.GetComponent<Animator>().Play("ani_serve_serve");
+                readytoserve = false;
+                ui_button.SetActive(false);
+        }
+    }
+
     private void Update()
     {
         if (readytoserve)
@@ -40,6 +57,10 @@ public class scr_station_serve : MonoBehaviour
 
             if (Input.GetKey(KeyCode.Space))
             {
+                if (instrtut != null)
+                {
+                    instrtut.tut_serve.SetActive(false);
+                }
                 this.GetComponent<Animator>().Play("ani_serve_serve");
                 readytoserve = false;
                 ui_button.SetActive(false);
@@ -48,6 +69,9 @@ public class scr_station_serve : MonoBehaviour
     }
     public void AddDish(int no)
     {
+        
+        
+
         par_toserve.transform.GetChild(crntamt).gameObject.SetActive(true);
         switch (no)
         {
@@ -57,14 +81,29 @@ public class scr_station_serve : MonoBehaviour
                 break;
             case 2:
                 par_toserve.transform.GetChild(crntamt).transform.GetChild(0).GetComponent<MeshRenderer>().material = soup;
-                totalmoney += 12;
+                totalmoney += 15;
                 break;
             case 3:
                 par_toserve.transform.GetChild(crntamt).transform.GetChild(0).GetComponent<MeshRenderer>().material = steak;
-                totalmoney += 25;
+                totalmoney += 35;
                 break;
         }
-        dishes.Add(no);
+
+        int percwaste = 0;
+        switch (GameObject.Find("obj_controller").GetComponent<scr_controller>().crnt_customer)
+        {
+            case 0:
+                percwaste = 65;
+                break;
+            case 1:
+                percwaste = 5;
+                break;
+        }
+        if (Random.Range(0, 100) < percwaste)
+        {
+            dishes.Add(no);
+        }
+        
         crntamt++;
 
     }
@@ -73,6 +112,7 @@ public class scr_station_serve : MonoBehaviour
     {
         if(GameObject.Find("obj_controller").GetComponent<scr_controller>() != null)
         {
+
             PlayCash();
             GameObject.Find("obj_var").GetComponent<scr_var>().AddMoney(totalmoney);
             GameObject.Find("station_closing").GetComponent<scr_station_closing>().totalearnt += totalmoney;
@@ -85,7 +125,7 @@ public class scr_station_serve : MonoBehaviour
         }
         else
         {
-
+            GameObject.Find("obj_instructor").GetComponent<scr_instructor_tutorial>().FinishStep(null);
         }
         
     }

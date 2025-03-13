@@ -9,6 +9,7 @@ public class scr_var : MonoBehaviour
 
     public float time = 21600;
     public float timemultiplier;
+    public bool special = false;
 
     public bool isTime = false;
     [SerializeField] TextMeshProUGUI moneytxt;
@@ -35,6 +36,19 @@ public class scr_var : MonoBehaviour
         }
     }
 
+    public void NewDay()
+    {
+        special = false;
+        
+        if(Random.RandomRange(0,100) < 30)
+        {
+            special = true;
+        }
+        
+        SetTime();
+        ResetTime();
+
+    }
     private void SetTime()
     {
         time += Time.deltaTime * timemultiplier;
@@ -54,12 +68,13 @@ public class scr_var : MonoBehaviour
         }
         else if(isTime)
         {
+            
             GameObject.Find("obj_instructor").GetComponent<scr_instructor>().GetComponent<scr_instructor>().StationClosing();
             isTime = false;
             phase = "Closing Time";
         }
 
-        timetxt.text = "<b>" + phase + " </b>" + string.Format("{0:00}:{1:00}", hours, minutes) + " <size=24>p.m. <br> Normal Weekday";
+        timetxt.text = "<b>" + phase + " </b>" + string.Format("{0:00}:{1:00}", hours, minutes) + " <size=24>p.m. <br> " + (special ? "<color=red>Chinese New Year<color=white>" : "Normal Weekday");
     }
 
     public void ResetTime()

@@ -13,6 +13,7 @@ public class scr_start : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("scn_tutorial");
+        GameObject.Find("obj_var").transform.GetChild(0).gameObject.SetActive(true);
+        SceneManager.LoadSceneAsync("scn_tutorial");
     }
 }

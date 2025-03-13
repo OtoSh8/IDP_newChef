@@ -37,8 +37,8 @@ public class scr_controller : MonoBehaviour
 
     [Header("Personality Preferences")]
     public int personalities = 2;
-    private string[] Customer_Prideful = { "Hello there sir,<!wait=0.5> its such a <b><+shake><funky> Greeaaaaat </b></funky></+shake> day today huh?<!wait=1>", "Anyways,<!wait=0.2> I'm feeling <!delay=0.2><+shake> very hungry <!delay=0.02> </+shake> so I'll have $<!wait=1>", "I'm looking forward to enjoying a <wave><!delay=0.1>hugeeeeee<!delay=0.02></wave> feastttt.<!wait=0.2> Hehe." };
-    private string[] Customer_Saving = { "Hello there, I'd like to have <!delay=0.2> maybe.....<!delay=0.02> <shake>Ahhh</shake>,<!wait=0.2> I don't know<!delay=0.1>....<!delay=0.02>", "<+shake><sketchy>Uhhhhhh</sketchy></+shake>,<!wait=0.2> how about<!delay=0.1>...<!wait=0.2><!delay=0.02> maybe not<!delay=0.1>....<!delay=0.02>", "<+grow>Oh</+grow>,<!wait=0.2> I'm sorry for holding up the line, I think I'll just have $" };
+    public string[] Customer_Prideful = { "Hello there sir,<!wait=0.5> its such a <b><+shake><funky> Greeaaaaat </b></funky></+shake> day today huh?<!wait=1>", "Anyways,<!wait=0.2> I'm feeling <!delay=0.2><+shake> very hungry <!delay=0.02> </+shake> so I'll have $<!wait=1>", "I'm looking forward to enjoying a <wave><!delay=0.1>hugeeeeee<!delay=0.02></wave> feastttt.<!wait=0.2> Hehe." };
+    public string[] Customer_Saving = { "Hello there, I'd like to have <!delay=0.2> maybe.....<!delay=0.02> <shake>Ahhh</shake>,<!wait=0.2> I don't know<!delay=0.1>....<!delay=0.02>", "<+shake><sketchy>Uhhhhhh</sketchy></+shake>,<!wait=0.2> how about<!delay=0.1>...<!wait=0.2><!delay=0.02> maybe not<!delay=0.1>....<!delay=0.02>", "<+grow>Oh</+grow>,<!wait=0.2> I'm sorry for holding up the line, I think I'll just have $" };
 
     private int Customer_Prideful_int = 3;
 
@@ -294,13 +294,17 @@ public class scr_controller : MonoBehaviour
     public IEnumerator GetCustomer()
     {
 
-        int generate_p = Random.Range(0, personalities);
+        int generate_p = Random.Range(1, personalities);
 
         switch (generate_p)
         {
             case 0:
                 //Pride
                  crnt_customer = 0;
+                if (GameObject.Find("obj_var").GetComponent<scr_var>().special)
+                {
+                    crnt_customer = 1;
+                }
                 break;
             case 1:
                 //Saving

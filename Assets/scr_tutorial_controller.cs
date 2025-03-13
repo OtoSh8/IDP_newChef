@@ -70,6 +70,8 @@ public class scr_tutorial_controller : MonoBehaviour
 
     private void Start()
     {
+        GameObject.Find("obj_var").transform.GetChild(0).gameObject.SetActive(false);
+
         dishlist.Add("2_1");
         par_dialog.GetComponent<Animator>().Play("ani_dialogue_enter");
         Customer_Speak(0);
@@ -112,6 +114,11 @@ public class scr_tutorial_controller : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            GameObject.Find("obj_var").transform.GetChild(1).gameObject.SetActive(true);
+            SceneManager.LoadScene("scn_preplay");
+        }
         
         if (Input.GetKeyDown(KeyCode.Space) && isTalking == false && Started == false){
             if (crnt_dialog_index < tutorial.Length)
@@ -158,6 +165,8 @@ public class scr_tutorial_controller : MonoBehaviour
                 GameObject.Find("obj_arduino_handler").GetComponent<scr_serialhandler_button>().phase = 2;
 
             }
+            GameObject.Find("obj_var").transform.GetChild(1).gameObject.SetActive(true);
+            
             SceneManager.LoadScene("scn_preplay");
         }
 
