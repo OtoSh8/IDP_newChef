@@ -90,15 +90,21 @@ public class scr_station_serve : MonoBehaviour
         }
 
         int percwaste = 0;
-        switch (GameObject.Find("obj_controller").GetComponent<scr_controller>().crnt_customer)
+
+
+        if (GameObject.Find("obj_controller").GetComponent<scr_controller>() != null)
         {
-            case 0:
-                percwaste = 65;
-                break;
-            case 1:
-                percwaste = 5;
-                break;
+            switch (GameObject.Find("obj_controller").GetComponent<scr_controller>().crnt_customer)
+            {
+                case 0:
+                    percwaste = 65;
+                    break;
+                case 1:
+                    percwaste = 5;
+                    break;
+            }
         }
+        
         if (Random.Range(0, 100) < percwaste)
         {
             dishes.Add(no);

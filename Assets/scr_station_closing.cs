@@ -57,7 +57,7 @@ public class scr_station_closing : MonoBehaviour
                 OnScrape();
             }
         }
-        else if (finalized)
+        else if (finalized && Input.GetKeyDown(KeyCode.Space))
         {
             //restart scene boss
             GameObject.Find("obj_var").GetComponent<scr_var>().NewDay();
@@ -67,13 +67,18 @@ public class scr_station_closing : MonoBehaviour
 
     public void OnButtonHit()
     {
-        if (isScraping)
+        if (isScraping && !finalized)
         {
             if (instrtut != null)
             {
                 instrtut.tut_closing.SetActive(false);
             }
             OnScrape();
+        }
+        else if (finalized)
+        {
+            GameObject.Find("obj_var").GetComponent<scr_var>().NewDay();
+            SceneManager.LoadScene("scn_preplay");
         }
     }
     public void ReInit()
@@ -101,14 +106,22 @@ public class scr_station_closing : MonoBehaviour
             {
                 crnt = ((int[])History[0].Clone()).ToList();
                 crnt_person = crnt[0];
-                dia.gameObject.SetActive(true);
+                if(dia != null)
+                {
+                    dia.gameObject.SetActive(true);
+
+                }
                 crnt.RemoveAt(0);
                 History.RemoveAt(0);
                 SetupScrape();
             }
             else
             {
-                dia.gameObject.SetActive(false);
+                if (dia != null)
+                {
+                    dia.gameObject.SetActive(false);
+
+                }
                 isScraping = false;
 
                 //FINISHED CLOSING

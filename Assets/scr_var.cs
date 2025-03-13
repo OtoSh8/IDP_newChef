@@ -28,7 +28,7 @@ public class scr_var : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.V))
         {
-            AddMoney(100);
+            time = 9999999;
         }
         if (isTime)
         {

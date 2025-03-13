@@ -294,7 +294,7 @@ public class scr_controller : MonoBehaviour
     public IEnumerator GetCustomer()
     {
 
-        int generate_p = Random.Range(1, personalities);
+        int generate_p = Random.Range(0, personalities);
 
         switch (generate_p)
         {
